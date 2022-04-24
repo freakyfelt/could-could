@@ -33,3 +33,64 @@ export const MultipleActionsPolicy: ResourcePolicyDocument = {
     },
   ],
 };
+
+export const SimpleEnvironmentDenyPolicy: ResourcePolicyDocument = {
+  ...BasicResourcePolicy,
+  definitions: [
+    ...BasicResourcePolicy.definitions,
+    {
+      environment: 'production',
+      policies: [
+        {
+          action: 'create',
+          effect: 'deny',
+          constraint: true
+        }
+      ]
+    }
+  ]
+}
+
+export const BasicContextualResourcePolicy: ResourcePolicyDocument = {
+  ...BasicResourcePolicy,
+  definitions: [
+    ...BasicResourcePolicy.definitions,
+    {
+      environment: 'production',
+      policies: [
+        {
+          action: 'create',
+          effect: 'deny',
+          constraint: {
+            '==': [
+              { var: 'subject.id' },
+              { var: 'doc.createdBy' }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+
+export const InContextResourcePolicy: ResourcePolicyDocument = {
+  ...BasicContextualResourcePolicy,
+  definitions: [
+    ...BasicResourcePolicy.definitions,
+    {
+      environment: 'production',
+      policies: [
+        {
+          action: 'create',
+          effect: 'deny',
+          constraint: {
+            some: [
+              { var: 'subject.groups' },
+              { in: [{ var: '' }, ['group1', 'group5']]}
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
