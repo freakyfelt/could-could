@@ -68,7 +68,7 @@ You will need a few pieces of information up front when creating a collection of
           }
         }
         {
-          "description": "Do not allow users to pet if the kitty is sleeping or eating",
+          "description": "Do not allow users (even admins!) to pet if the kitty is sleeping or eating",
           "action": "pet",
           "effect": "deny", // will override any allow statement
           "constraint": {
