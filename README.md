@@ -8,7 +8,7 @@ could-could is yet another authorization library built atop [JsonLogic](https://
 - Allows for defining policies across `environments` (e.g. `development`, `production-use1`, etc) as well as `actions` (e.g. `create`, `kitty:PetKitty`, etc) on a given resource type. Policies will be merged with an `or` so any one matching policy is sufficient
 - Provides for both `allow` and `deny` constraints. `deny` constraints will always take precedence
 - Allows for a context to be provided when evaluating the policy, allowing for more complex conditional logic
-- Uses a portable [JSONSchema](lib/validator/schema.json) for validating the shape of the policies
+- Uses a portable [JSONSchema](./schemas/resource-policy-2022-04.schema.json) for validating the shape of the policies
 - Can extend JsonLogic with custom functions if needed (not recommended as you will need to implement the same functions in each consumer of the policy)
 
 ## Terms
