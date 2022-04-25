@@ -1,10 +1,10 @@
 # @freakyfelt/could-could
 
-could-could is yet another authorization library built atop [JsonLogic](https://jsonlogic.com), a JSON-based schema and library that allows for boolean algebra to defined and executed against a context. This allows for more complex rules based on who the principal (e.g. user/service) is, what state a resource is in (e.g. block an action if the resource is in a `closed` state), or a combination of factors. The same policy can then be consumed in frontend apps as well as backend apps, potentially in any language supported by JsonLogic.
+could-could is yet another authorization library built atop [JsonLogic](https://jsonlogic.com), a JSON-based schema and library that allows for conditional statements to be defined and evaluated against a context. This allows for more complex rules based on who the principal (e.g. user/service) is, what state a resource is in (e.g. block an action if the resource is in a `closed` state), or a combination of factors. The same policy can then be consumed in frontend apps as well as backend apps, potentially in any language supported by JsonLogic.
 
 ## Features
 
-- Compiles policies at resolver create time for predictable performance
+- Generates the set of policies ahead of time for predictable performance
 - Allows for defining policies across `environments` (e.g. `development`, `production-use1`, etc) as well as `actions` (e.g. `create`, `kitty:PetKitty`, etc) on a given resource type. Policies will be merged with an `or` so any one matching policy is sufficient
 - Provides for both `allow` and `deny` constraints. `deny` constraints will always take precedence
 - Allows for a context to be provided when evaluating the policy, allowing for more complex conditional logic
@@ -13,7 +13,7 @@ could-could is yet another authorization library built atop [JsonLogic](https://
 
 ## Terms
 
-- `resourceType`: an identifier for a type of entity to validate (e.g. `BlogPost`, `com.kitties.Kitty`)
+- `resourceType`: an identifier for a type of resource to validate (e.g. `BlogPost`, `com.kitties.Kitty`)
 - `environment`: an arbitrary identifier for an operating context, allowing for different constraints in `test`, non-production (e.g. `alpha`, `preview`), or different regions of `production` (e.g. `production-use1`)
 - `action`: an identifier of what kind of action is being requested (e.g. `create`, `kittes:PetKitty`). Actions can be specified as a single action, an array of actions, or `*` which will match any action.
 - `effect`: what the result should be if the `constraint` is true
@@ -117,3 +117,9 @@ JsonLogic supports adding custom boolean evaluators by using `JsonLogic.add_oper
 ## Contributing
 
 This library is mostly a proof of concept, but if you find it useful definitely fork and submit a PR against this repository. The project uses `prettier` and `jest` for linting and testing respectively. You can run tests, linting, and build by using `npm run release`.
+
+The package is broken into three major areas: the validator, the parser, and the resolver.
+
+* the validator checks that the provided resource policy matches the schema, has listed all potential actions defined in the constraints, and has an evaluatable set of constraints
+* the parser does the heavy lifting of turning a resource policy into a compiled Map of action => JsonLogic
+* the resolver accepts a policyStore and handles the runtime evaluation logic based on the provided action, resource type, and context

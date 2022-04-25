@@ -18,6 +18,13 @@ interface ParseInput {
   targetEnvironment: string;
 }
 
+/**
+ * Creates a Map of all policies that either mention an action or are global to all actions (`"*"`)
+ *
+ * @param policies a list of action policies to map
+ * @param actions a predefined list of possible actions
+ * @returns
+ */
 function mapPoliciesToActions(
   policies: ActionPolicyDefinition[],
   actions: string[]
@@ -37,6 +44,7 @@ function mapPoliciesToActions(
     }
   });
 
+  // Now copy the collected global actions into each action's policies
   const globalActions = policiesByAction.get("*")!;
   policiesByAction.delete("*");
   policiesByAction.forEach((policies, key) =>
@@ -100,21 +108,23 @@ export class ResourcePolicyParser {
 
     const allow =
       toAllow.length === 0
-        ? false
+        ? false // default to false (denied) as the fallback
         : {
             some: [
+              // only one check has to pass to be permitted
               toAllow,
-              // Check if any resolved value equals true
+              // For each item ({ var: "" }) check if any resolved value equals true
               { "===": [{ var: "" }, true] },
             ],
           };
     const deny =
       toDeny.length === 0
-        ? true
+        ? true // default to permitted if no deny constraints were defined
         : {
             none: [
+              // all checks must be false
               toDeny,
-              // Check if any resolved value equals true
+              // For each item ({ var: "" }) check if any resolved value equals true
               { "===": [{ var: "" }, true] },
             ],
           };

@@ -33,6 +33,17 @@ export class ResourcePolicyValidator {
     }
   }
 
+  /**
+   * Checks a provided resource policy document for correctness
+   *
+   * A correct policy:
+   * - matches the schema
+   * - lists all possible actions in $.actions
+   * - has a parseable constraint
+   *
+   * @throws {MalformedResourcePolicyError} the document is not well formed
+   * @throws {MalformedActionPoliciesError} one or more action policies has an unparseable constraint
+   */
   validate(doc: ResourcePolicyDocument): void {
     if (!this.validator(doc)) {
       const details = this.ajv.errorsText(this.validator.errors);
@@ -43,6 +54,11 @@ export class ResourcePolicyValidator {
     this.validateDefinedActions(doc);
   }
 
+  /**
+   * Checks that the document has listed all actions in its policy definitions, plus ensures
+   * that the constraints contained within each action policy definition are evaluatable by
+   * our parser (JsonLogic usually)
+   */
   private validateDefinedActions(doc: ResourcePolicyDocument): void {
     const discoveredActions = new Set<string>();
     const invalidActionPolicies: MalformedActionPoliciesDetail[] = [];

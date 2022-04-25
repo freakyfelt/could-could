@@ -24,6 +24,11 @@ export class PolicyResolver {
     this.parser = opts.parser ?? jsonLogic;
   }
 
+  /**
+   * Determines if an action can be taken on a given resourceType
+   *
+   * @param context extra data that can be referenced with { "var": "path.to.resource" }
+   */
   can<TContext = unknown>(
     { action, resourceType }: CanInput,
     context?: TContext
