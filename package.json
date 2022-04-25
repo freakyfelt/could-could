@@ -1,7 +1,7 @@
 {
-  "name": "hello-json-logic",
+  "name": "@freakyfelt/could-could",
   "version": "1.0.0",
-  "description": "",
+  "description": "An authorization library built on top of JsonLogic",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
