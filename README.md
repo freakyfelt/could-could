@@ -1,4 +1,4 @@
-# could-could
+# @freakyfelt/could-could
 
 could-could is yet another authorization library built atop [JsonLogic](https://jsonlogic.com), a JSON-based schema and library that allows for boolean algebra to defined and executed against a context. This allows for more complex rules based on who the principal (e.g. user/service) is, what state a resource is in (e.g. block an action if the resource is in a `closed` state), or a combination of factors. The same policy can then be consumed in frontend apps as well as backend apps, potentially in any language supported by JsonLogic.
 
@@ -98,7 +98,7 @@ You will need a few pieces of information up front when creating a collection of
 Next, in the consuming application create a resolver and make it available for use:
 
 ```ts
-import { createPolicyResolver } from 'could-could'
+import { createPolicyResolver } from '@freakyfelt/could-could'
 
 const resolver = createPolicyResolver({ policies, targetEnvironment: process.env.NODE_ENV })
 

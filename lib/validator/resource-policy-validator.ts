@@ -1,6 +1,6 @@
 import Ajv, { ValidateFunction } from "ajv";
 import * as jsonLogic from "json-logic-js";
-import * as defaultSchema from "./schema.json";
+import * as defaultSchema from "./../../schemas/resource-policy-2022-04.schema.json";
 import { JsonLogicParser, JsonSchema, ResourcePolicyDocument } from "../types";
 
 import {
