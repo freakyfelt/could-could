@@ -1,7 +1,7 @@
 import { type ResourcePolicyDocument } from "../../..";
 
 export const BasicResourcePolicy: ResourcePolicyDocument = {
-  resource: "FooResource",
+  resourceType: "FooResource",
   actions: ["create", "read", "update", "delete"],
   definitions: [
     {
@@ -18,7 +18,7 @@ export const BasicResourcePolicy: ResourcePolicyDocument = {
 };
 
 export const MultipleActionsPolicy: ResourcePolicyDocument = {
-  resource: "FooResource",
+  resourceType: "FooResource",
   actions: ["create", "read", "update", "delete"],
   definitions: [
     {
@@ -39,58 +39,55 @@ export const SimpleEnvironmentDenyPolicy: ResourcePolicyDocument = {
   definitions: [
     ...BasicResourcePolicy.definitions,
     {
-      environment: 'production',
+      environment: "production",
       policies: [
         {
-          action: 'create',
-          effect: 'deny',
-          constraint: true
-        }
-      ]
-    }
-  ]
-}
+          action: "create",
+          effect: "deny",
+          constraint: true,
+        },
+      ],
+    },
+  ],
+};
 
 export const BasicContextualResourcePolicy: ResourcePolicyDocument = {
   ...BasicResourcePolicy,
   definitions: [
     ...BasicResourcePolicy.definitions,
     {
-      environment: 'production',
+      environment: "production",
       policies: [
         {
-          action: 'create',
-          effect: 'deny',
+          action: "create",
+          effect: "deny",
           constraint: {
-            '==': [
-              { var: 'subject.id' },
-              { var: 'doc.createdBy' }
-            ]
-          }
-        }
-      ]
-    }
-  ]
-}
+            "==": [{ var: "subject.id" }, { var: "doc.createdBy" }],
+          },
+        },
+      ],
+    },
+  ],
+};
 
 export const InContextResourcePolicy: ResourcePolicyDocument = {
   ...BasicContextualResourcePolicy,
   definitions: [
     ...BasicResourcePolicy.definitions,
     {
-      environment: 'production',
+      environment: "production",
       policies: [
         {
-          action: 'create',
-          effect: 'deny',
+          action: "create",
+          effect: "deny",
           constraint: {
             some: [
-              { var: 'subject.groups' },
-              { in: [{ var: '' }, ['group1', 'group5']]}
-            ]
-          }
-        }
-      ]
-    }
-  ]
-}
+              { var: "subject.groups" },
+              { in: [{ var: "" }, ["group1", "group5"]] },
+            ],
+          },
+        },
+      ],
+    },
+  ],
+};

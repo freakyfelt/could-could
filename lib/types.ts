@@ -7,7 +7,7 @@ export interface JsonLogicParser {
 export type JsonSchema = JSONSchemaType<unknown>;
 
 export interface ResourcePolicyDocument {
-  resource: string;
+  resourceType: string;
   actions: string[];
   definitions: EnvironmentPolicyDefinition[];
 }

@@ -8,6 +8,7 @@
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
     "format": "prettier -w lib test",
+    "release": "npm run test && npm run format && npm run build",
     "test": "jest"
   },
   "keywords": [],

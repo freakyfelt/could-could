@@ -1,1 +1,2 @@
-export * from './resource-policy-parser'
+export * from "./create-policy-store";
+export * from "./resource-policy-parser";

@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "https://github.com/freakyfelt/could-could/schema.json",
   "type": "object",
-  "required": ["resource", "actions", "definitions"],
+  "required": ["resourceType", "actions", "definitions"],
   "properties": {
-    "resource": { "$ref": "#/$defs/resourceType" },
+    "resourceType": { "$ref": "#/$defs/resourceType" },
     "actions": {
       "type": "array",
       "minItems": 1,
@@ -67,6 +67,10 @@
             },
             { "type": "boolean" }
           ]
+        },
+        "description": {
+          "type": "string",
+          "description": "an optional description of what the policy does"
         }
       }
     },
