@@ -1,93 +1,67 @@
-import { type ResourcePolicyDocument } from "../../..";
+import { type PolicyDocument } from "../../..";
 
-export const BasicResourcePolicy: ResourcePolicyDocument = {
-  resourceType: "FooResource",
+export const BasicResourcePolicy: PolicyDocument = {
   actions: ["create", "read", "update", "delete"],
-  definitions: [
+  policies: [
     {
-      environment: "*",
-      policies: [
-        {
-          action: "create",
-          effect: "allow",
-          constraint: true,
-        },
-      ],
+      action: "create",
+      effect: "allow",
+      constraint: true,
     },
   ],
 };
 
-export const MultipleActionsPolicy: ResourcePolicyDocument = {
-  resourceType: "FooResource",
+export const MultipleActionsPolicy: PolicyDocument = {
   actions: ["create", "read", "update", "delete"],
-  definitions: [
+  policies: [
     {
-      environment: "*",
-      policies: [
-        {
-          action: ["create", "read"],
-          effect: "allow",
-          constraint: true,
-        },
-      ],
+      action: ["create", "read"],
+      effect: "allow",
+      constraint: true,
     },
   ],
 };
 
-export const SimpleEnvironmentDenyPolicy: ResourcePolicyDocument = {
+export const BasicDenyPolicy: PolicyDocument = {
   ...BasicResourcePolicy,
-  definitions: [
-    ...BasicResourcePolicy.definitions,
+  policies: [
     {
-      environment: "production",
-      policies: [
-        {
-          action: "create",
-          effect: "deny",
-          constraint: true,
-        },
-      ],
+      action: "create",
+      effect: "deny",
+      constraint: {
+        "==": [{ var: "subject.id" }, { var: "doc.createdBy" }],
+      },
     },
   ],
 };
 
-export const BasicContextualResourcePolicy: ResourcePolicyDocument = {
+export const BasicContextualResourcePolicy: PolicyDocument = {
   ...BasicResourcePolicy,
-  definitions: [
-    ...BasicResourcePolicy.definitions,
+  policies: [
+    ...BasicResourcePolicy.policies,
     {
-      environment: "production",
-      policies: [
-        {
-          action: "create",
-          effect: "deny",
-          constraint: {
-            "==": [{ var: "subject.id" }, { var: "doc.createdBy" }],
-          },
-        },
-      ],
+      action: "create",
+      effect: "deny",
+      constraint: {
+        "==": [{ var: "subject.id" }, { var: "doc.createdBy" }],
+      },
     },
   ],
 };
 
-export const InContextResourcePolicy: ResourcePolicyDocument = {
+export const InContextResourcePolicy: PolicyDocument = {
   ...BasicContextualResourcePolicy,
-  definitions: [
-    ...BasicResourcePolicy.definitions,
+  policies: [
+    ...BasicResourcePolicy.policies,
     {
-      environment: "production",
-      policies: [
-        {
-          action: "create",
-          effect: "deny",
-          constraint: {
-            some: [
-              { var: "subject.groups" },
-              { in: [{ var: "" }, ["group1", "group5"]] },
-            ],
-          },
-        },
-      ],
+      action: "create",
+      effect: "deny",
+      constraint: {
+        some: [
+          { var: "subject.groups" },
+          { in: [{ var: "" }, ["group1", "group5"]] },
+        ],
+      },
     },
   ],
 };

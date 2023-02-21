@@ -6,18 +6,12 @@ export interface JsonLogicParser {
 }
 export type JsonSchema = JSONSchemaType<unknown>;
 
-export interface ResourcePolicyDocument {
-  resourceType: string;
+export interface PolicyDocument {
   actions: string[];
-  definitions: EnvironmentPolicyDefinition[];
+  policies: PolicyStatement[];
 }
 
-export interface EnvironmentPolicyDefinition {
-  environment: string | string[];
-  policies: ActionPolicyDefinition[];
-}
-
-export interface ActionPolicyDefinition {
+export interface PolicyStatement {
   action: string | string[];
   effect: "allow" | "deny";
   constraint: RulesLogic;

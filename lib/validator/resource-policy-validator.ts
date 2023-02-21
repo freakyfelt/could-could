@@ -1,35 +1,33 @@
 import Ajv, { ValidateFunction } from "ajv";
 import * as jsonLogic from "json-logic-js";
-import * as defaultSchema from "./../../schemas/resource-policy-2022-04.schema.json";
-import { JsonLogicParser, JsonSchema, ResourcePolicyDocument } from "../types";
+import * as defaultSchema from "./../../schemas/resource-policy-2023-02.schema.json";
+import { JsonLogicParser, JsonSchema, PolicyDocument } from "../types";
 
 import {
-  MalformedActionPoliciesDetail,
-  MalformedActionPoliciesError,
-  MalformedResourcePolicyError,
+  MalformedStatementDetail,
+  MalformedPolicyStatementError,
+  MalformedPolicyDocumentError as MalformedPolicyDocumentError,
 } from "./errors";
 
-interface ValidateResourcePolicyInput {
+interface ValidatorOptions {
   schema?: JsonSchema;
   validator?: ValidateFunction;
   parser?: JsonLogicParser;
 }
 
-export class ResourcePolicyValidator {
+export class PolicyDocumentValidator {
   private ajv: Ajv;
   private validator: ValidateFunction;
   private parser: JsonLogicParser;
 
-  constructor({ schema, validator, parser }: ValidateResourcePolicyInput = {}) {
+  constructor(schema?: JsonSchema, { validator, parser }: ValidatorOptions = {}) {
     this.parser = parser ?? jsonLogic;
 
     this.ajv = new Ajv({ allErrors: true });
     if (validator) {
       this.validator = validator;
-    } else if (schema) {
-      this.validator = this.ajv.compile(schema);
     } else {
-      this.validator = this.ajv.compile(defaultSchema);
+      this.validator = this.ajv.compile(schema ?? defaultSchema);
     }
   }
 
@@ -44,11 +42,11 @@ export class ResourcePolicyValidator {
    * @throws {MalformedResourcePolicyError} the document is not well formed
    * @throws {MalformedActionPoliciesError} one or more action policies has an unparseable constraint
    */
-  validate(doc: ResourcePolicyDocument): void {
+  validate(doc: PolicyDocument): void {
     if (!this.validator(doc)) {
       const details = this.ajv.errorsText(this.validator.errors);
 
-      throw new MalformedResourcePolicyError(doc, details);
+      throw new MalformedPolicyDocumentError(doc, details);
     }
 
     this.validateDefinedActions(doc);
@@ -59,24 +57,22 @@ export class ResourcePolicyValidator {
    * that the constraints contained within each action policy definition are evaluatable by
    * our parser (JsonLogic usually)
    */
-  private validateDefinedActions(doc: ResourcePolicyDocument): void {
+  private validateDefinedActions(doc: PolicyDocument): void {
     const discoveredActions = new Set<string>();
-    const invalidActionPolicies: MalformedActionPoliciesDetail[] = [];
+    const invalidActionPolicies: MalformedStatementDetail[] = [];
 
-    doc.definitions.forEach((envPolicy) => {
-      envPolicy.policies.forEach((policy) => {
-        if (Array.isArray(policy.action)) {
-          policy.action.forEach((action) => discoveredActions.add(action));
-        } else {
-          discoveredActions.add(policy.action);
-        }
+    doc.policies.forEach((policy) => {
+      if (Array.isArray(policy.action)) {
+        policy.action.forEach((action) => discoveredActions.add(action));
+      } else {
+        discoveredActions.add(policy.action);
+      }
 
-        try {
-          this.parser.apply(policy.constraint);
-        } catch (error) {
-          invalidActionPolicies.push({ policy, error });
-        }
-      });
+      try {
+        this.parser.apply(policy.constraint);
+      } catch (error) {
+        invalidActionPolicies.push({ policy, error });
+      }
     });
 
     const allowedActions = new Set([...doc.actions, "*"]);
@@ -88,13 +84,13 @@ export class ResourcePolicyValidator {
     });
 
     if (missingActions.size > 0) {
-      throw new MalformedResourcePolicyError(
+      throw new MalformedPolicyDocumentError(
         doc,
         `Unlisted actions found: '${Array.from(missingActions).join("', ")}'`
       );
     }
     if (invalidActionPolicies.length) {
-      throw new MalformedActionPoliciesError(invalidActionPolicies);
+      throw new MalformedPolicyStatementError(invalidActionPolicies);
     }
   }
 }
