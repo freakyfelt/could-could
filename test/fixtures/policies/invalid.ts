@@ -1,36 +1,31 @@
-import { type ResourcePolicyDocument } from "../../..";
+import { type PolicyDocument } from "../../..";
 import { BasicResourcePolicy } from "./valid";
 
-export const MissingActionsPolicy: ResourcePolicyDocument = {
+export const MissingActionsPolicy: PolicyDocument = {
   ...BasicResourcePolicy,
   actions: undefined,
 } as any;
 
-export const EmptyActionsPolicy: ResourcePolicyDocument = {
+export const EmptyActionsPolicy: PolicyDocument = {
   ...BasicResourcePolicy,
   actions: [],
 };
 
 /** missing the 'create' constraint */
-export const DiscoveredActionPolicy: ResourcePolicyDocument = {
+export const DiscoveredActionPolicy: PolicyDocument = {
   ...BasicResourcePolicy,
   actions: BasicResourcePolicy.actions.filter(
-    (action) => action !== BasicResourcePolicy.definitions[0].policies[0].action
+    (action) => action !== BasicResourcePolicy.policies[0].action
   ),
 };
 
-export const InvalidConstraintPolicy: ResourcePolicyDocument = {
+export const InvalidConstraintPolicy: PolicyDocument = {
   ...BasicResourcePolicy,
-  definitions: [
+  policies: [
     {
-      environment: "test",
-      policies: [
-        {
-          action: "create",
-          effect: "allow",
-          constraint: { foo: "bar" } as any,
-        },
-      ],
+      action: "create",
+      effect: "allow",
+      constraint: { foo: "bar" } as any,
     },
   ],
 };

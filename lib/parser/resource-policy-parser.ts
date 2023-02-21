@@ -1,21 +1,16 @@
 import jsonLogic, { RulesLogic } from "json-logic-js";
 
-import { ResourcePolicyValidator } from "../validator";
+import { PolicyDocumentValidator } from "../validator";
 import type {
-  ActionPolicyDefinition,
+  PolicyStatement,
   JsonLogicParser,
-  ResourcePolicyDocument,
+  PolicyDocument,
 } from "../types";
-import type { ResourcePolicy } from "./types";
+import type { PolicyStore } from "./types";
 
 interface ResourcePolicyParserOptions {
   constraintParser?: JsonLogicParser;
-  policyValidator?: ResourcePolicyValidator;
-}
-
-interface ParseInput {
-  doc: ResourcePolicyDocument;
-  targetEnvironment: string;
+  policyValidator?: PolicyDocumentValidator;
 }
 
 /**
@@ -26,11 +21,11 @@ interface ParseInput {
  * @returns
  */
 function mapPoliciesToActions(
-  policies: ActionPolicyDefinition[],
+  policies: PolicyStatement[],
   actions: string[]
-): Map<string, ActionPolicyDefinition[]> {
+): Map<string, PolicyStatement[]> {
   // Pre-populate the list of actions so we can set '*' actions appropriately
-  const policiesByAction = new Map<string, ActionPolicyDefinition[]>();
+  const policiesByAction = new Map<string, PolicyStatement[]>();
   policiesByAction.set("*", []);
   actions.forEach((action) => policiesByAction.set(action, []));
 
@@ -55,36 +50,32 @@ function mapPoliciesToActions(
 }
 
 export class ResourcePolicyParser {
-  private policyValidator: ResourcePolicyValidator;
+  private policyValidator: PolicyDocumentValidator;
 
   constructor(opts: ResourcePolicyParserOptions = {}) {
     this.policyValidator =
-      opts.policyValidator ?? new ResourcePolicyValidator();
+      opts.policyValidator ?? new PolicyDocumentValidator();
   }
 
-  /** Parses a resource policy document for a target environment and returns a Map<action, RulesLogic> */
-  parse({ doc, targetEnvironment }: ParseInput): ResourcePolicy {
+  parseAll(docs: PolicyDocument[]): PolicyStore {
+    const actions: Set<string> = new Set();
+    const policies: PolicyStatement[] = [];
+    docs.forEach((doc) => {
+      this.policyValidator.validate(doc);
+      doc.actions.forEach((action) => actions.add(action));
+      policies.push(...doc.policies);
+    });
+
+    return this.parse({ actions: Array.from(actions), policies });
+  }
+
+  /** Parses a resource policy document and returns a Map<action, RulesLogic> */
+  parse(doc: PolicyDocument): PolicyStore {
     this.policyValidator.validate(doc);
 
-    // Find all policies whose environment mentions either our targetEnvironment or '*' (global)
-    const relevantPolicies = doc.definitions
-      .filter((def) => {
-        if (Array.isArray(def.environment)) {
-          return def.environment.some((env) =>
-            ["*", targetEnvironment].includes(env)
-          );
-        } else {
-          return ["*", targetEnvironment].includes(def.environment);
-        }
-      })
-      .flatMap((def) => def.policies);
+    const policiesByAction = mapPoliciesToActions(doc.policies, doc.actions);
 
-    const policiesByAction = mapPoliciesToActions(
-      relevantPolicies,
-      doc.actions
-    );
-
-    const policy: ResourcePolicy = new Map();
+    const policy: PolicyStore = new Map();
     policiesByAction.forEach((policies, action) => {
       policy.set(action, this.compileActionPolicies(policies));
     });
@@ -92,9 +83,7 @@ export class ResourcePolicyParser {
     return policy;
   }
 
-  private compileActionPolicies(
-    policies: ActionPolicyDefinition[]
-  ): RulesLogic {
+  private compileActionPolicies(policies: PolicyStatement[]): RulesLogic {
     const toAllow: RulesLogic[] = [];
     const toDeny: RulesLogic[] = [];
 
@@ -106,7 +95,7 @@ export class ResourcePolicyParser {
       }
     });
 
-    const allow =
+    const allow: RulesLogic =
       toAllow.length === 0
         ? false // default to false (denied) as the fallback
         : {
@@ -117,18 +106,16 @@ export class ResourcePolicyParser {
               { "===": [{ var: "" }, true] },
             ],
           };
-    const deny =
+    const deny: RulesLogic =
       toDeny.length === 0
         ? true // default to permitted if no deny constraints were defined
         : {
-            none: [
-              // all checks must be false
-              toDeny,
-              // For each item ({ var: "" }) check if any resolved value equals true
-              { "===": [{ var: "" }, true] },
-            ],
+            // Using some to bail as soon as one deny statement passes, then ! to negate
+            "!": {
+              some: [toDeny, { "===": [{ var: "" }, true] }],
+            },
           };
 
-    return { and: [allow, deny] } as any;
+    return { and: [deny, allow] };
   }
 }

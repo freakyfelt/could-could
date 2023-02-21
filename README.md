@@ -5,17 +5,15 @@ could-could is yet another authorization library built atop [JsonLogic](https://
 ## Features
 
 - Generates the set of policies ahead of time for predictable performance
-- Allows for defining policies across `environments` (e.g. `development`, `production-use1`, etc) as well as `actions` (e.g. `create`, `kitty:PetKitty`, etc) on a given resource type. Policies will be merged with an `or` so any one matching policy is sufficient
 - Provides for both `allow` and `deny` constraints. `deny` constraints will always take precedence
 - Allows for a context to be provided when evaluating the policy, allowing for more complex conditional logic
-- Uses a portable [JSONSchema](./schemas/resource-policy-2022-04.schema.json) for validating the shape of the policies
+- Uses a portable [JSONSchema](./schemas/resource-policy-2023-02.schema.json) for validating the shape of the policies
 - Can extend JsonLogic with custom functions if needed (not recommended as you will need to implement the same functions in each consumer of the policy)
 
 ## Terms
 
-- `resourceType`: an identifier for a type of resource to validate (e.g. `BlogPost`, `com.kitties.Kitty`)
-- `environment`: an arbitrary identifier for an operating context, allowing for different constraints in `test`, non-production (e.g. `alpha`, `preview`), or different regions of `production` (e.g. `production-use1`)
-- `action`: an identifier of what kind of action is being requested (e.g. `create`, `kittes:PetKitty`). Actions can be specified as a single action, an array of actions, or `*` which will match any action.
+- `action`: an identifier of what kind of action(s) are being requested (e.g. `create`, `kitties:PetKitty`)
+  - Actions can be specified as a single action, an array of actions, or `*` which will match any action.
 - `effect`: what the result should be if the `constraint` is true
 - `constraint`: the rules that will be evaluated to determine if an action can occur
 - `context`: the extra data that can be provided to make decisions, such as a principal (e.g. user/service object) or the resource in question
@@ -24,72 +22,54 @@ could-could is yet another authorization library built atop [JsonLogic](https://
 
 You will need a few pieces of information up front when creating a collection of policies:
 
-1. a resource type naming convention
 1. a list of actions that are permitted for each resource type. All other actions will evaluate to `false`
-1. what environments you plan to use across all resource types, such as `development`, `test`, `beta`, `production`
+  - TIP: use a namespacing scheme such as `documents:deleteDocument` to group actions by domain
 1. what information will be available in the context when evaluating an action
 
 ```jsonc
 // example policy stored somewhere that can be consumed at runtime
 {
-  "resourceType": "Kitty",
-  "actions": ["create", "read", "update", "pet"],
-  "definitions": [
+  "actions": ["kitty:create", "kitty:read", "kitty:update", "kitty:pet"],
+  "policies": [
     {
-      "environment": "*", // applies across all environments
-      "policies": [
-        {
-          "description": "Allow everyone to create a kitty",
-          "action": "create", // specify a single action
-          "effect": "allow",
-          "constraint": true
-        },
-        {
-          "description": "Allow admins to take any action",
-          "action": "*",
-          "effect": "allow",
-          "constraint": {
-            // expects that context will include a subject object with a role property
-            "===": [
-              { "var": "subject.role" },
-              "admin"
-            ]
-          }
-        },
-        {
-          "description": "allow owners to read, update and pet the kitty",
-          "action": ["read", "update", "pet"], // specify a list of actions
-          "effect": "allow",
-          "constraint": {
-            "===": [
-              { "var": "subject.id" },
-              { "var": "kitty.ownerId" }
-            ]
-          }
-        }
-        {
-          "description": "Do not allow users (even admins!) to pet if the kitty is sleeping or eating",
-          "action": "pet",
-          "effect": "deny", // will override any allow statement
-          "constraint": {
-            "in": [
-              { "var": "kitty.state" },
-              ["eating", "sleeping"]
-            ]
-          }
-        }
-      ]
+      "description": "Allow everyone to create a kitty",
+      "action": "kitty:create", // specify a single action
+      "effect": "allow",
+      "constraint": true
     },
     {
-      "environment": ["development", "alpha", "beta"], // specify a list of environments
-      "policies": [
-        {
-          "description": "allow developers to update any kitty in non-prod environments",
-          "action": "update",
-          "effect": "allow",
-          "constraint": true
-        }
-      ]
+      "description": "Allow admins to take any action",
+      "action": "*",
+      "effect": "allow",
+      "constraint": {
+        // expects that context will include a subject object with a role property
+        "===": [
+          { "var": "subject.role" },
+          "admin"
+        ]
+      }
+    },
+    {
+      "description": "allow owners to read, update and pet the kitty",
+      "action": ["kitty:read", "kitty:update", "kitty:pet"], // specify a list of actions
+      "effect": "allow",
+      "constraint": {
+        "===": [
+          { "var": "subject.id" },
+          { "var": "kitty.ownerId" }
+        ]
+      }
+    }
+    {
+      "description": "Do not allow users (even admins!) to pet if the kitty is sleeping or eating",
+      "action": "kitty:pet",
+      "effect": "deny", // will override any allow statement
+      "constraint": {
+        "in": [
+          { "var": "kitty.state" },
+          ["eating", "sleeping"]
+        ]
+      }
     }
   ]
 }
@@ -100,11 +80,11 @@ Next, in the consuming application create a resolver and make it available for u
 ```ts
 import { createPolicyResolver } from '@freakyfelt/could-could'
 
-const resolver = createPolicyResolver({ policies, targetEnvironment: process.env.NODE_ENV })
+const resolver = createPolicyResolver({ policies })
 
 // ...then at runtime
 function petKitty(kitty: Kitty, { subject }: RequestContext) {
-  if (!resolver.can({ action: 'pet', resourceType: 'Kitty' }, { kitty, subject })) {
+  if (!resolver.can({ action: 'kitty:pet' }, { kitty, subject })) {
     throw new NotAuthorizedError()
   }
 }
@@ -122,4 +102,4 @@ The package is broken into three major areas: the validator, the parser, and the
 
 * the validator checks that the provided resource policy matches the schema, has listed all potential actions defined in the constraints, and has an evaluatable set of constraints
 * the parser does the heavy lifting of turning a resource policy into a compiled Map of action => JsonLogic
-* the resolver accepts a policyStore and handles the runtime evaluation logic based on the provided action, resource type, and context
+* the resolver accepts a policyStore and handles the runtime evaluation logic based on the provided action and context
