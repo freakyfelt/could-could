@@ -1,27 +1,16 @@
-import { ResourcePolicyDocument } from "../types";
+import { PolicyDocument } from "../types";
 import { ResourcePolicyParser } from "./resource-policy-parser";
 import { PolicyStore } from "./types";
 
-interface CreatePolicyStoreInput {
-  policies: ResourcePolicyDocument[];
-  targetEnvironment: string;
+interface CreatePolicyStoreOptions {
   policyParser?: ResourcePolicyParser;
 }
 
-export function createPolicyStore(input: CreatePolicyStoreInput): PolicyStore {
-  const policyParser = input.policyParser ?? new ResourcePolicyParser();
-  const policyStore: PolicyStore = new Map();
+export function createPolicyStore(
+  policies: PolicyDocument[],
+  opts: CreatePolicyStoreOptions = {}
+): PolicyStore {
+  const policyParser = opts.policyParser ?? new ResourcePolicyParser();
 
-  input.policies.forEach((doc) => {
-    if (policyStore.has(doc.resourceType)) {
-      throw new Error(`already have definition for ${doc.resourceType}`);
-    }
-
-    policyStore.set(
-      doc.resourceType,
-      policyParser.parse({ doc, targetEnvironment: input.targetEnvironment })
-    );
-  });
-
-  return policyStore;
+  return policyParser.parseAll(policies);
 }

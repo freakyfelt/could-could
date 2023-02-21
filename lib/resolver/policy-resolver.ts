@@ -7,11 +7,6 @@ interface ResourceActionResolverOptions {
   parser?: JsonLogicParser;
 }
 
-interface CanInput {
-  action: string;
-  resourceType: string;
-}
-
 export class PolicyResolver {
   private policyStore: PolicyStore;
   private parser: JsonLogicParser;
@@ -29,15 +24,10 @@ export class PolicyResolver {
    *
    * @param context extra data that can be referenced with { "var": "path.to.resource" }
    */
-  can<TContext = unknown>(
-    { action, resourceType }: CanInput,
-    context?: TContext
-  ): boolean {
-    const logic = this.policyStore.get(resourceType)?.get(action);
+  can<TContext = unknown>(action: string, context?: TContext): boolean {
+    const logic = this.policyStore.get(action);
     if (!logic) {
-      throw new Error(
-        `Unknown resource/action combination: '${resourceType}', '${action}'`
-      );
+      throw new Error(`Unknown action '${action}'`);
     }
 
     return this.parser.apply(logic, context);

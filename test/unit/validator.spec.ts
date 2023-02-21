@@ -1,7 +1,7 @@
-import { ResourcePolicyValidator } from "../..";
+import { PolicyDocumentValidator } from "../..";
 import {
-  MalformedActionPoliciesError,
-  MalformedResourcePolicyError,
+  MalformedPolicyStatementError,
+  MalformedPolicyDocumentError,
 } from "../../lib/validator/errors";
 import {
   DiscoveredActionPolicy,
@@ -15,7 +15,7 @@ import {
 } from "../fixtures/policies/valid";
 
 describe("validateResourcePolicy", () => {
-  const validator = new ResourcePolicyValidator();
+  const validator = new PolicyDocumentValidator();
 
   it("does not throw with a valid resource policy", () => {
     expect(() => validator.validate(BasicResourcePolicy)).not.toThrowError();
@@ -28,19 +28,19 @@ describe("validateResourcePolicy", () => {
   describe("actions validations", () => {
     it("throws when $.actions is missing", () => {
       expect(() => validator.validate(MissingActionsPolicy)).toThrowError(
-        MalformedResourcePolicyError
+        MalformedPolicyDocumentError
       );
     });
 
     it("throws when $.actions is an empty array", () => {
       expect(() => validator.validate(EmptyActionsPolicy)).toThrowError(
-        MalformedResourcePolicyError
+        MalformedPolicyDocumentError
       );
     });
 
     it("throws when an action is missing from $.actions", () => {
       expect(() => validator.validate(DiscoveredActionPolicy)).toThrowError(
-        MalformedResourcePolicyError
+        MalformedPolicyDocumentError
       );
     });
   });
@@ -48,7 +48,7 @@ describe("validateResourcePolicy", () => {
   describe("constraint validations", () => {
     it("throws when a constraint is unparseable", () => {
       expect(() => validator.validate(InvalidConstraintPolicy)).toThrowError(
-        MalformedActionPoliciesError
+        MalformedPolicyStatementError
       );
     });
   });
