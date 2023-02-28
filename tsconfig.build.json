@@ -4,5 +4,6 @@
     "outDir": "dist",
     "declaration": true,
   },
-  "include": ["./index.ts", "lib"]
+  "include": ["./index.ts", "lib"],
+  "exclude": ["**/*.test.ts", "**/__fixtures__/*.ts"]
 }

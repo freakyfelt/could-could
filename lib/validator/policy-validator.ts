@@ -1,7 +1,12 @@
 import Ajv, { ValidateFunction } from "ajv";
 import * as jsonLogic from "json-logic-js";
-import * as defaultSchema from "./../../schemas/resource-policy-2023-02.schema.json";
-import { JsonLogicParser, JsonSchema, PolicyDocument } from "../types";
+import * as defaultSchema from "../../schemas/resource-policy-2023-02.schema.json";
+import {
+  JsonLogicParser,
+  JsonSchema,
+  PolicyDocument,
+  PolicyStatement,
+} from "../types";
 
 import {
   MalformedStatementDetail,
@@ -20,7 +25,10 @@ export class PolicyDocumentValidator {
   private validator: ValidateFunction;
   private parser: JsonLogicParser;
 
-  constructor(schema?: JsonSchema, { validator, parser }: ValidatorOptions = {}) {
+  constructor(
+    schema?: JsonSchema,
+    { validator, parser }: ValidatorOptions = {}
+  ) {
     this.parser = parser ?? jsonLogic;
 
     this.ajv = new Ajv({ allErrors: true });
@@ -46,10 +54,12 @@ export class PolicyDocumentValidator {
     if (!this.validator(doc)) {
       const details = this.ajv.errorsText(this.validator.errors);
 
+      console.error({ details });
+      console.dir({ doc }, { depth: 10 });
       throw new MalformedPolicyDocumentError(doc, details);
     }
 
-    this.validateDefinedActions(doc);
+    this.validateConstraints(doc);
   }
 
   /**
@@ -57,40 +67,19 @@ export class PolicyDocumentValidator {
    * that the constraints contained within each action policy definition are evaluatable by
    * our parser (JsonLogic usually)
    */
-  private validateDefinedActions(doc: PolicyDocument): void {
-    const discoveredActions = new Set<string>();
-    const invalidActionPolicies: MalformedStatementDetail[] = [];
+  private validateConstraints(doc: PolicyDocument): void {
+    const invalidStatements: MalformedStatementDetail[] = [];
 
-    doc.policies.forEach((policy) => {
-      if (Array.isArray(policy.action)) {
-        policy.action.forEach((action) => discoveredActions.add(action));
-      } else {
-        discoveredActions.add(policy.action);
-      }
-
+    doc.statement.forEach((policy) => {
       try {
         this.parser.apply(policy.constraint);
       } catch (error) {
-        invalidActionPolicies.push({ policy, error });
+        invalidStatements.push({ policy, error });
       }
     });
 
-    const allowedActions = new Set([...doc.actions, "*"]);
-    const missingActions = new Set<string>();
-    discoveredActions.forEach((action) => {
-      if (!allowedActions.has(action)) {
-        missingActions.add(action);
-      }
-    });
-
-    if (missingActions.size > 0) {
-      throw new MalformedPolicyDocumentError(
-        doc,
-        `Unlisted actions found: '${Array.from(missingActions).join("', ")}'`
-      );
-    }
-    if (invalidActionPolicies.length) {
-      throw new MalformedPolicyStatementError(invalidActionPolicies);
+    if (invalidStatements.length) {
+      throw new MalformedPolicyStatementError(invalidStatements);
     }
   }
 }
