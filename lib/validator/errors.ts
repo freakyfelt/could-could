@@ -10,7 +10,7 @@ export class MalformedPolicyDocumentError extends ValidatorError {
   public readonly details: string;
 
   constructor(doc: PolicyDocument, details: string) {
-    super("Malformed resource policy");
+    super("Malformed policy document");
     this.doc = doc;
     this.details = details;
   }

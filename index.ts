@@ -1,4 +1,4 @@
-export * from './lib/parser'
-export * from "./lib/resolver"
+export * from './lib/store/indexed-statements-store'
+export * from "./lib/policy-resolver"
 export * from './lib/types'
 export * from './lib/validator'

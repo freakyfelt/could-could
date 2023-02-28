@@ -2,5 +2,6 @@
   "extends": "@tsconfig/node17/tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true
-  }
+  },
+  "exclude": ["dist"]
 }
