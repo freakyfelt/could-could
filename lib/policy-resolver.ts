@@ -1,5 +1,6 @@
-import jsonLogic from "json-logic-js";
 import pathExists from "just-has";
+import jsonLogic from "json-logic-js";
+import LRUCache from "lru-cache";
 import { PolicyStatementStore } from "./store/types";
 import { JsonLogicParser, PolicyDocument, PolicyStatement } from "./types";
 import {
@@ -9,8 +10,15 @@ import {
 import { PolicyDocumentValidator } from "./validator";
 import { CachedStatementsStore } from "./store/cached-statements-store";
 
-interface ResourceActionResolverOptions {
+interface PolicyResolverOptions {
+  /** restrict valid actions to only this list */
+  allowedActions?: string[];
   parser?: JsonLogicParser;
+  cache?: LRUCache.Options<string, CompiledFns<unknown>>;
+}
+
+const DEFAULT_CACHE_OPTIONS: LRUCache.Options<string, CompiledFns<unknown>> = {
+  max: 1000
 }
 
 type CompiledFns<TContext> = {
@@ -31,7 +39,7 @@ function hasAllPaths(statement: ParsedPolicyStatement, ctx: unknown) {
 }
 
 export class PolicyResolver {
-  static fromDocuments(docs: PolicyDocument[]): PolicyResolver {
+  static fromDocuments(docs: PolicyDocument[], opts: PolicyResolverOptions = {}): PolicyResolver {
     const validator = new PolicyDocumentValidator();
 
     const statements = docs.flatMap((doc) => {
@@ -40,10 +48,10 @@ export class PolicyResolver {
       return doc.statement;
     });
 
-    return this.fromStatements(statements);
+    return this.fromStatements(statements, opts);
   }
 
-  static fromStatements(statements: PolicyStatement[]): PolicyResolver {
+  static fromStatements(statements: PolicyStatement[], opts: PolicyResolverOptions = {}): PolicyResolver {
     const parsed = statements.map((statement) =>
       parsePolicyStatement(statement)
     );
@@ -51,20 +59,22 @@ export class PolicyResolver {
     const store = new CachedStatementsStore();
     store.addAll(parsed);
 
-    return new PolicyResolver(store);
+    return new PolicyResolver(store, opts);
   }
 
+  #allowedActions: string[] | null;
   #policyStore: PolicyStatementStore;
   #parser: JsonLogicParser;
-  #cache: Map<string, CompiledFns<unknown>>;
+  #cache: LRUCache<string, CompiledFns<unknown>>;
 
   constructor(
     policyStore: PolicyStatementStore,
-    opts: ResourceActionResolverOptions = {}
+    opts: PolicyResolverOptions = {}
   ) {
     this.#policyStore = policyStore;
+    this.#allowedActions = opts.allowedActions ?? null;
     this.#parser = opts.parser ?? jsonLogic;
-    this.#cache = new Map();
+    this.#cache = new LRUCache({ ...DEFAULT_CACHE_OPTIONS, ...opts.cache });
   }
 
   /**
@@ -73,6 +83,10 @@ export class PolicyResolver {
    * @param context extra data that can be referenced with { "var": "path.to.resource" }
    */
   can<TContext = unknown>(action: string, context?: TContext): boolean {
+    if (this.#allowedActions && !this.#allowedActions.includes(action)) {
+      return false;
+    }
+
     if (!this.#cache.has(action)) {
       this.#cache.set(action, this.#compileAction(action));
     }
@@ -89,6 +103,10 @@ export class PolicyResolver {
     action: string,
     context?: TContext
   ): ParsedPolicyStatement[] {
+    if (this.#allowedActions && !this.#allowedActions.includes(action)) {
+      return [];
+    }
+
     if (!this.#cache.has(action)) {
       this.#cache.set(action, this.#compileAction(action));
     }
