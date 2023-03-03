@@ -1,4 +1,5 @@
 import { ParsedPolicyStatement } from "../parsed-policy-statement";
+import { Emitter } from "../utils/events";
 
 export type ParsedStatementsDB = Map<string, ParsedPolicyStatement>;
 
@@ -15,7 +16,12 @@ export interface ByActionIndex {
   regex: Array<[RegExp, string]>;
 }
 
-export interface PolicyStatementStore {
+export type StoreEvents = {
+  /** returns a list of sids that were updated */
+  updated: string[];
+};
+
+export interface PolicyStatementStore extends Emitter<StoreEvents> {
   add(statement: ParsedPolicyStatement): void;
   addAll(statements: ParsedPolicyStatement[]): void;
   get(sid: string): ParsedPolicyStatement | undefined;

@@ -1,28 +1,45 @@
+import LRUCache from "lru-cache";
 import assert from "node:assert";
 import { ParsedPolicyStatement, SYM_SID } from "../parsed-policy-statement";
-import { PolicyStatementStore } from "./types";
+import { TypedEmitter } from "../utils/events";
 import { IndexedStatementsStore } from "./indexed-statements-store";
+import { PolicyStatementStore, StoreEvents } from "./types";
+
+interface CachedStoreOptions {
+  cache?: LRUCache.Options<string, string[]>;
+}
+
+const DEFAULT_CACHE_OPTIONS: LRUCache.Options<string, string[]> = {
+  max: 1000,
+};
 
 /**
  * Stores statements and allows for fetching matching statements by action
  */
-export class CachedStatementsStore implements PolicyStatementStore {
+export class CachedStatementsStore
+  extends TypedEmitter<StoreEvents>
+  implements PolicyStatementStore
+{
   #store: PolicyStatementStore;
-  #cache: Map<string, string[]>;
+  #cache: LRUCache<string, string[]>;
 
-  constructor(store?: PolicyStatementStore) {
+  constructor(store?: PolicyStatementStore, opts: CachedStoreOptions = {}) {
+    super();
+
+    this.#cache = new LRUCache({ ...DEFAULT_CACHE_OPTIONS, ...opts.cache });
     this.#store = store ?? new IndexedStatementsStore();
-    this.#cache = new Map();
+    this.#store.on("updated", (sids) => {
+      this.#cache.clear();
+      this.emit("updated", sids);
+    });
   }
 
   add(statement: ParsedPolicyStatement) {
     this.#store.add(statement);
-    this.#cache = new Map();
   }
 
   addAll(statements: ParsedPolicyStatement[]) {
     this.#store.addAll(statements);
-    this.#cache = new Map();
   }
 
   get(sid: string): ParsedPolicyStatement | undefined {

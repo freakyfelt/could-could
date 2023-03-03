@@ -18,8 +18,8 @@ interface PolicyResolverOptions {
 }
 
 const DEFAULT_CACHE_OPTIONS: LRUCache.Options<string, CompiledFns<unknown>> = {
-  max: 1000
-}
+  max: 100,
+};
 
 type CompiledFns<TContext> = {
   can(ctx: TContext): boolean;
@@ -33,13 +33,14 @@ function hasAllPaths(statement: ParsedPolicyStatement, ctx: unknown) {
   if (typeof ctx !== "object" || ctx === null) {
     return false;
   }
-  return statement.contextPaths.every((path) =>
-    pathExists(ctx, path)
-  );
+  return statement.contextPaths.every((path) => pathExists(ctx, path));
 }
 
 export class PolicyResolver {
-  static fromDocuments(docs: PolicyDocument[], opts: PolicyResolverOptions = {}): PolicyResolver {
+  static fromDocuments(
+    docs: PolicyDocument[],
+    opts: PolicyResolverOptions = {}
+  ): PolicyResolver {
     const validator = new PolicyDocumentValidator();
 
     const statements = docs.flatMap((doc) => {
@@ -51,7 +52,10 @@ export class PolicyResolver {
     return this.fromStatements(statements, opts);
   }
 
-  static fromStatements(statements: PolicyStatement[], opts: PolicyResolverOptions = {}): PolicyResolver {
+  static fromStatements(
+    statements: PolicyStatement[],
+    opts: PolicyResolverOptions = {}
+  ): PolicyResolver {
     const parsed = statements.map((statement) =>
       parsePolicyStatement(statement)
     );
@@ -71,10 +75,12 @@ export class PolicyResolver {
     policyStore: PolicyStatementStore,
     opts: PolicyResolverOptions = {}
   ) {
-    this.#policyStore = policyStore;
     this.#allowedActions = opts.allowedActions ?? null;
     this.#parser = opts.parser ?? jsonLogic;
+
     this.#cache = new LRUCache({ ...DEFAULT_CACHE_OPTIONS, ...opts.cache });
+    this.#policyStore = policyStore;
+    this.#policyStore.on("updated", () => this.#cache.clear());
   }
 
   /**
@@ -137,18 +143,17 @@ export class PolicyResolver {
         return false;
       }
 
-      const isAllowed = allow.some((statement) => this.#apply(statement, ctx));
-      return isAllowed;
+      return allow.some((statement) => this.#apply(statement, ctx));
     };
 
     return { can, explain };
   }
 
-  #apply<TContext>(statement: ParsedPolicyStatement, ctx: TContext) {
+  #apply<TContext>(statement: ParsedPolicyStatement, ctx: TContext): boolean {
     if (!hasAllPaths(statement, ctx)) {
       return false;
     }
 
-    return this.#parser.apply({ or: [statement.constraint, false] }, ctx);
+    return this.#parser.apply(statement.constraint, ctx) === true;
   }
 }
