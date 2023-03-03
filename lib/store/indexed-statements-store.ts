@@ -1,9 +1,11 @@
 import assert from "node:assert";
 import { ParsedPolicyStatement, SYM_SID } from "../parsed-policy-statement";
+import { TypedEmitter } from "../utils/events";
 import {
   ParsedStatementsDB,
   ByActionIndex,
   PolicyStatementStore,
+  StoreEvents,
 } from "./types";
 
 type StatementsDBWithIndex = {
@@ -23,11 +25,16 @@ const createStatementsDB = (): StatementsDBWithIndex => ({
 /**
  * Stores statements and allows for fetching matching statements by action
  */
-export class IndexedStatementsStore implements PolicyStatementStore {
+export class IndexedStatementsStore
+  extends TypedEmitter<StoreEvents>
+  implements PolicyStatementStore
+{
   #statements: ParsedStatementsDB;
   #byAction: ByActionIndex;
 
   constructor(params?: StatementsDBWithIndex) {
+    super();
+
     const { statements, byAction } = params ?? createStatementsDB();
     this.#statements = statements;
     this.#byAction = byAction;
@@ -44,6 +51,7 @@ export class IndexedStatementsStore implements PolicyStatementStore {
       return sid;
     });
     this.#reindexAll(sids);
+    this.emit("updated", sids);
   }
 
   get(sid: string): ParsedPolicyStatement | undefined {
