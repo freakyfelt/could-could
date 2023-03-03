@@ -86,6 +86,7 @@ export const InvalidConstraintStatement = parsePolicyStatement(
   {
     action: "create",
     effect: "allow",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constraint: { foo: "bar" } as any,
   },
   "InvalidConstraintStatement"

@@ -16,9 +16,9 @@ export class MalformedPolicyDocumentError extends ValidatorError {
   }
 }
 
-export type MalformedStatementDetail = {
+export type MalformedStatementDetail<E = unknown> = {
   policy: PolicyStatement;
-  error: any;
+  error: E;
 };
 
 /**

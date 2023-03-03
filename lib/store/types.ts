@@ -1,5 +1,4 @@
 import { ParsedPolicyStatement } from "../parsed-policy-statement";
-import { PolicyStatement } from "../types";
 
 export type ParsedStatementsDB = Map<string, ParsedPolicyStatement>;
 
