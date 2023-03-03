@@ -44,10 +44,12 @@ export class IndexedStatementsStore implements PolicyStatementStore {
   }
 
   addAll(statements: ParsedPolicyStatement[]) {
-    statements.forEach((statement) =>
-      this.#statements.set(statement[SYM_SID], statement)
-    );
-    this.#reindexAll(statements);
+    const sids = statements.map((statement) => {
+      const sid = statement[SYM_SID];
+      this.#statements.set(sid, statement);
+      return sid;
+    });
+    this.#reindexAll(sids);
   }
 
   get(sid: string): ParsedPolicyStatement | undefined {
@@ -85,8 +87,18 @@ export class IndexedStatementsStore implements PolicyStatementStore {
     return statement;
   }
 
-  #reindexAll(statements: ParsedPolicyStatement[]) {
-    const sids = statements.map((s) => s[SYM_SID]);
+  #reindexAll(sids: string[]) {
+    const statements: ParsedPolicyStatement[] = [];
+
+    sids.forEach((sid) => {
+      const statement = this.#statements.get(sid);
+
+      if (!statement) {
+        return;
+      } else {
+        statements.push(statement);
+      }
+    });
 
     const globAll = statements
       .filter((s) => s.actionsByType.globAll)
