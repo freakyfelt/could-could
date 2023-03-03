@@ -5,7 +5,6 @@ import {
   GlobStartStatement,
   MultipleActionsStatement,
 } from "../__fixtures__/statements";
-import { parsePolicyStatement } from "../parsed-policy-statement";
 import { IndexedStatementsStore } from "./indexed-statements-store";
 
 describe("IndexedStatementsStore", () => {

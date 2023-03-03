@@ -1,4 +1,4 @@
-import { PolicyDocumentValidator } from "../..";
+import { PolicyDocumentValidator } from "./policy-validator";
 import { MalformedPolicyStatementError } from "./errors";
 import {
   BasicResourcePolicy,
@@ -6,11 +6,9 @@ import {
   MultipleActionsPolicy,
 } from "../__fixtures__/policies";
 import {
-  BasicAllowStatement,
   GlobAllStatement,
   GlobEndStatement,
   GlobStartStatement,
-  MultipleActionsStatement,
 } from "../__fixtures__/statements";
 
 describe("validateResourcePolicy", () => {

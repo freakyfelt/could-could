@@ -1,6 +1,6 @@
-import { PolicyStatement } from "./types";
 import { RulesLogic } from "json-logic-js";
 import { randomUUID } from "node:crypto";
+import { PolicyStatement } from "./types";
 import { traverseRulesLogic } from "./utils/logic";
 import {
   isStringLiteral,

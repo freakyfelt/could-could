@@ -8,6 +8,7 @@
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
     "format": "prettier -w lib test",
+    "lint": "eslint --ext .ts lib/**/*.ts",
     "release": "npm run test && npm run format && npm run build",
     "test": "jest"
   },
@@ -16,7 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "ajv": "^8.11.0",
-    "json-logic-js": "^2.0.2"
+    "json-logic-js": "^2.0.2",
+    "just-has": "^2.3.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
@@ -30,6 +32,10 @@
     "@tsconfig/node17": "^1.0.0",
     "@types/jest": "^29.2.2",
     "@types/json-logic-js": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
     "jest": "^29.3.1",
     "prettier": "^2.6.2",
     "semantic-release": "^20.1.1",

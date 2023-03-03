@@ -39,6 +39,7 @@ function _traverseRulesLogic(
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const val: RulesLogic = (logic as Record<string, any | any[]>)[op];
   const isArr = Array.isArray(val);
   const operands = isArr ? val : [val];
