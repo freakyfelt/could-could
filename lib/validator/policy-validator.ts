@@ -1,17 +1,11 @@
 import Ajv, { ValidateFunction } from "ajv";
 import * as jsonLogic from "json-logic-js";
 import * as defaultSchema from "../../schemas/resource-policy-2023-02.schema.json";
-import {
-  JsonLogicParser,
-  JsonSchema,
-  PolicyDocument,
-  PolicyStatement,
-} from "../types";
-
+import { JsonLogicParser, JsonSchema, PolicyDocument } from "../types";
 import {
   MalformedStatementDetail,
   MalformedPolicyStatementError,
-  MalformedPolicyDocumentError as MalformedPolicyDocumentError,
+  MalformedPolicyDocumentError,
 } from "./errors";
 
 interface ValidatorOptions {

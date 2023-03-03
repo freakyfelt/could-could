@@ -1,14 +1,13 @@
-import jsonLogic, { RulesLogic } from "json-logic-js";
+import jsonLogic from "json-logic-js";
+import pathExists from "just-has";
 import { PolicyStatementStore } from "./store/types";
 import { JsonLogicParser, PolicyDocument, PolicyStatement } from "./types";
 import {
   ParsedPolicyStatement,
   parsePolicyStatement,
 } from "./parsed-policy-statement";
-import { pathExists } from "./utils/obj";
 import { PolicyDocumentValidator } from "./validator";
 import { CachedStatementsStore } from "./store/cached-statements-store";
-import { IndexedStatementsStore } from "./store/indexed-statements-store";
 
 interface ResourceActionResolverOptions {
   parser?: JsonLogicParser;
@@ -27,7 +26,7 @@ function hasAllPaths(statement: ParsedPolicyStatement, ctx: unknown) {
     return false;
   }
   return statement.contextPaths.every((path) =>
-    pathExists(ctx as Record<string, unknown>, path)
+    pathExists(ctx, path)
   );
 }
 
@@ -78,7 +77,7 @@ export class PolicyResolver {
       this.#cache.set(action, this.#compileAction(action));
     }
 
-    return this.#cache.get(action)!.can(context);
+    return this.#cache.get(action)?.can(context) ?? false;
   }
 
   /**
@@ -94,7 +93,7 @@ export class PolicyResolver {
       this.#cache.set(action, this.#compileAction(action));
     }
 
-    return this.#cache.get(action)!.explain(context);
+    return this.#cache.get(action)?.explain(context) ?? [];
   }
 
   #compileAction<TContext>(action: string): CompiledFns<TContext> {

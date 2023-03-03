@@ -1,11 +1,5 @@
 import assert from "node:assert";
-import { PolicyStatement } from "../types";
-import {
-  ParsedPolicyStatement,
-  parsePolicyStatement,
-  SYM_SID,
-} from "../parsed-policy-statement";
-import { disjoint } from "../utils/arr";
+import { ParsedPolicyStatement, SYM_SID } from "../parsed-policy-statement";
 import {
   ParsedStatementsDB,
   ByActionIndex,
@@ -68,6 +62,7 @@ export class IndexedStatementsStore implements PolicyStatementStore {
     const statementIds = [...this.#byAction.globAll];
 
     if (this.#byAction.exact.has(action)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       statementIds.push(...this.#byAction.exact.get(action)!);
     }
     for (const [regexp, sid] of this.#byAction.regex) {

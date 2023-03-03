@@ -41,7 +41,7 @@ export class CachedStatementsStore implements PolicyStatementStore {
       );
     }
 
-    return this.#cache.get(action)!.map((sid) => this.#mustGet(sid));
+    return this.#cache.get(action)?.map((sid) => this.#mustGet(sid)) ?? [];
   }
 
   #mustGet(sid: string): ParsedPolicyStatement {
