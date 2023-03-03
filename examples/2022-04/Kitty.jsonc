@@ -1,0 +1,78 @@
+/*
+  Shows an example usage for our Kitty resource
+
+  == Example Context
+  {
+    kitty: {
+      state: 'purring',
+      ownerId: 'sillyLittleMe'
+    },
+    subject: {
+      id: 'sillyLittleMe',
+      role: 'admin'
+    }
+  }
+*/
+{
+  "$schema": "../../schemas/resource-policy-2022-04.schema.json",
+  "resourceType": "Kitty",
+  "actions": ["create", "read", "update", "pet"],
+  "definitions": [
+    {
+      "environment": "*", // applies across all environments
+      "policies": [
+        {
+          "description": "Allow everyone to create a kitty",
+          "action": "create", // specify a single action
+          "effect": "allow",
+          "constraint": true
+        },
+        {
+          "description": "Allow admins to take any action",
+          "action": "*",
+          "effect": "allow",
+          "constraint": {
+            // expects that context will include a subject object with a role property
+            "===": [
+              { "var": "subject.role" },
+              "admin"
+            ]
+          }
+        },
+        {
+          "description": "allow owners to read, update and pet the kitty",
+          "action": ["read", "update", "pet"], // specify a list of actions
+          "effect": "allow",
+          "constraint": {
+            "===": [
+              { "var": "subject.id" },
+              { "var": "kitty.ownerId" }
+            ]
+          }
+        },
+        {
+          "description": "Do not allow users (even admins!) to pet if the kitty is sleeping or eating",
+          "action": "pet",
+          "effect": "deny", // will override any allow statement
+          "constraint": {
+            "in": [
+              { "var": "kitty.state" },
+              ["eating", "sleeping"]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "environment": ["development", "alpha", "beta"], // specify a list of environments
+      "policies": [
+        {
+          "description": "allow developers to update any kitty in non-prod environments",
+          "action": "update",
+          "effect": "allow",
+          "constraint": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+/*
+  Shows an example usage for creating policies for our dumbdata service's Document resource
+
+  == Example Context
+  {
+    Resource: {
+      Tags: ["Public", "ReadOnly"],
+      AuthorURI: "urn::12345:whodunnit:users/SillyMe",
+      ...
+    },
+    Principal: {
+      URI: "urn::12345:whodunnit:users/SillyMe",
+      RoleURI: "urn::12345:whodunnit:roles/StandardUser"
+    },
+    Environment: {
+      CurrentEnv: "Prod-use1"
+    }
+  }
+*/
+{
+  "$schema": "../../schemas/resource-policy-2022-04.schema.json",
+  "resourceType": "dumbdata:Document",
+  "actions": [
+    "dumbdata:CreateDocument",
+    "dumbdata:DeleteDocument",
+    "dumbdata:GetDocument",
+    "dumbdata:PutDocument",
+    "dumbdata:QueryDocuments"
+  ],
+  "definitions": [
+    {
+      "environment": "*",
+      "policies": [
+        {
+          "description": "Create a dropbox where anyone can create a document, but can't read or update",
+          "action": "dumbdata:CreateDocument",
+          "effect": "allow",
+          "constraint": true
+        },
+        {
+          "description": "Allow anyone to read/query documents with the Public tag",
+          "action": ["dumbdata:GetDocument", "dumbdata:QueryDocuments"],
+          "effect": "allow",
+          "constraint": {
+            "some": [
+              { "var": "Resource.Tags" },
+              // { "var": "" } references the current element from Resource.Tags
+              { "in": [{ "var": "" }, ["Public"]]}
+            ]
+          }
+        },
+        {
+          "description": "Allow users to manage documents they've created if the Editable tag is present",
+          "action": "*",
+          "effect": "allow",
+          "constraint": {
+            "and": [
+              {
+                "some": [
+                  { "var": "Resource.Tags" },
+                  { "===": [{ "var": "" }, "Editable"] }
+                ]
+              },
+              {
+                "===": [
+                  { "var": "Principal.URI" },
+                  { "var": "Resource.AuthorURI" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Block users from managing documents if the ReadOnly tag is present and they're not an admin",
+          "action": ["dumbdata:DeleteDocument", "dumbdata:PutDocument"],
+          "effect": "deny",
+          "constraint": {
+            "all": [
+              {
+                "some": [
+                  { "var": "Resource.Tags" },
+                  { "===": [{ "var": "" }, "ReadOnly"] }
+                ]
+              },
+              {
+                "!==": [
+                  { "var": "Principal.RoleURI" },
+                  "urn::12345:whodunnit:roles/Administrator"
+                ]
+              },
+              // Don't block mutations in the test suite
+              // NOTE: this is just a hypothetical example. Please don't actually do this.
+              {
+                "!==": [
+                  { "var": "Environment.CurrentEnv" },
+                  "test"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "environment": "test",
+      "policies": [
+        {
+          "description": "Allow the test runner to delete documents it created, regardless of the Editable tag being present",
+          "action": "dumbdata:DeleteItem",
+          "effect": "allow",
+          "constraint": {
+            "===": [
+              { "var": "Resource.AuthorURI" },
+              { "var": "Principal.URI" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
