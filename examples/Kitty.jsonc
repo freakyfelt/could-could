@@ -15,9 +15,8 @@
 */
 {
   "$schema": "../schemas/resource-policy-2023-02.schema.json",
-  "resourceType": "Kitty",
   "actions": ["create", "read", "update", "pet"],
-  "policies": [
+  "statement": [
     {
       "description": "Allow everyone to create a kitty",
       "action": "create", // specify a single action

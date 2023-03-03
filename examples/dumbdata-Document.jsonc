@@ -12,22 +12,11 @@
       URI: "urn::12345:whodunnit:users/SillyMe",
       RoleURI: "urn::12345:whodunnit:roles/StandardUser"
     },
-    Environment: {
-      CurrentEnv: "Prod-use1"
-    }
   }
 */
 {
   "$schema": "../schemas/resource-policy-2023-02.schema.json",
-  "resourceType": "dumbdata:Document",
-  "actions": [
-    "dumbdata:CreateDocument",
-    "dumbdata:DeleteDocument",
-    "dumbdata:GetDocument",
-    "dumbdata:PutDocument",
-    "dumbdata:QueryDocuments"
-  ],
-  "policies": [
+  "statement": [
     {
       "description": "Create a dropbox where anyone can create a document, but can't read or update",
       "action": "dumbdata:CreateDocument",
@@ -83,14 +72,6 @@
             "!==": [
               { "var": "Principal.RoleURI" },
               "urn::12345:whodunnit:roles/Administrator"
-            ]
-          },
-          // Don't block mutations in the test suite
-          // NOTE: this is just a hypothetical example. Please don't actually do this.
-          {
-            "!==": [
-              { "var": "Environment.CurrentEnv" },
-              "test"
             ]
           }
         ]
