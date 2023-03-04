@@ -42,6 +42,10 @@ export class CachedStatementsStore
     this.#store.addAll(statements);
   }
 
+  addGroup(gid: string, statements: ParsedPolicyStatement[]): void {
+    this.#store.addGroup(gid, statements);
+  }
+
   get(sid: string): ParsedPolicyStatement | undefined {
     return this.#store.get(sid);
   }
@@ -59,6 +63,10 @@ export class CachedStatementsStore
     }
 
     return this.#cache.get(action)?.map((sid) => this.#mustGet(sid)) ?? [];
+  }
+
+  findAllByGID(gid: string): ParsedPolicyStatement[] {
+    return this.#store.findAllByGID(gid);
   }
 
   #mustGet(sid: string): ParsedPolicyStatement {

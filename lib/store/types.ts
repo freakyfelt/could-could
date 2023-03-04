@@ -24,8 +24,10 @@ export type StoreEvents = {
 export interface PolicyStatementStore extends Emitter<StoreEvents> {
   add(statement: ParsedPolicyStatement): void;
   addAll(statements: ParsedPolicyStatement[]): void;
+  addGroup(gid: string, statements: ParsedPolicyStatement[]): void;
   get(sid: string): ParsedPolicyStatement | undefined;
   has(sid: string): boolean;
 
   findAllByAction(action: string): ParsedPolicyStatement[];
+  findAllByGID(gid: string): ParsedPolicyStatement[];
 }

@@ -18,8 +18,9 @@ export type ActionsByType = {
 export type ParsedPolicyStatement = {
   /** a globally-unique statement identifier */
   sid: string;
-  /** an optional grouping identifier for things like policy documents */
-  gid: string;
+
+  /** an optional grouping identifier */
+  gid?: string;
 
   effect: PolicyStatement["effect"];
   constraint: PolicyStatement["constraint"];
@@ -85,7 +86,6 @@ export function parsePolicyActions(actions: string[]): ActionsByType {
 
 interface ParseOptions {
   sid?: string;
-  gid?: string;
 }
 
 export function parsePolicyStatement(
@@ -96,11 +96,9 @@ export function parsePolicyStatement(
   const actions = arrayify(action);
 
   const sid = opts.sid ?? statement.sid ?? randomUUID();
-  const gid = opts.gid ?? sid;
 
   return {
     sid,
-    gid,
 
     effect,
     constraint,

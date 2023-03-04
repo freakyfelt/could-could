@@ -1,14 +1,16 @@
 import pathExists from "just-has";
 import jsonLogic from "json-logic-js";
 import LRUCache from "lru-cache";
+import { randomUUID } from "node:crypto";
+import { CachedStatementsStore } from "./store/cached-statements-store";
 import { PolicyStatementStore } from "./store/types";
-import { JsonLogicParser, PolicyDocument, PolicyStatement } from "./types";
 import {
   ParsedPolicyStatement,
   parsePolicyStatement,
 } from "./parsed-policy-statement";
+import { JsonLogicParser, PolicyDocument, PolicyStatement } from "./types";
+import { arrayify } from "./utils/arr";
 import { PolicyDocumentValidator } from "./validator";
-import { CachedStatementsStore } from "./store/cached-statements-store";
 
 interface PolicyResolverOptions {
   /** restrict valid actions to only this list */
@@ -42,14 +44,22 @@ export class PolicyResolver {
     opts: PolicyResolverOptions = {}
   ): PolicyResolver {
     const validator = new PolicyDocumentValidator();
+    const store = new CachedStatementsStore();
 
-    const statements = docs.flatMap((doc) => {
+    docs.forEach((doc) => {
       validator.validate(doc);
 
-      return doc.statement;
+      const gid = doc.id ?? randomUUID();
+
+      const parsed = arrayify(doc.statement).map((statement, idx) => {
+        const sid = [gid, statement.sid ?? idx].join("/");
+
+        return parsePolicyStatement(statement, { sid });
+      });
+      store.addGroup(gid, parsed);
     });
 
-    return this.fromStatements(statements, opts);
+    return new PolicyResolver(store, opts);
   }
 
   static fromStatements(
