@@ -10,13 +10,15 @@
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
-    "format": "prettier -w lib test",
+    "format": "prettier -w lib",
     "lint": "eslint --ext .ts lib/**/*.ts",
-    "release": "npm run test && npm run format && npm run build",
-    "test": "jest"
+    "prepublishOnly": "npm run build",
+    "pretest": "npm run lint",
+    "test": "jest",
+    "posttest": "npm run format"
   },
   "keywords": [],
-  "author": "",
+  "author": "Bruce Felt",
   "license": "ISC",
   "dependencies": {
     "ajv": "^8.11.0",
@@ -25,8 +27,6 @@
     "lru-cache": "^7.18.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-typescript": "^7.16.7",
     "@semantic-release/changelog": "^6.0.2",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
@@ -43,6 +43,7 @@
     "jest": "^29.3.1",
     "prettier": "^2.6.2",
     "semantic-release": "^20.1.1",
+    "ts-jest": "^29.0.5",
     "ts-node": "^10.7.0",
     "typescript": "^4.9.5"
   }
