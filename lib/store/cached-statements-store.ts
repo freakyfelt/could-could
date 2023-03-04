@@ -1,6 +1,6 @@
 import LRUCache from "lru-cache";
 import assert from "node:assert";
-import { ParsedPolicyStatement, SYM_SID } from "../parsed-policy-statement";
+import { ParsedPolicyStatement } from "../parsed-policy-statement";
 import { TypedEmitter } from "../utils/events";
 import { IndexedStatementsStore } from "./indexed-statements-store";
 import { PolicyStatementStore, StoreEvents } from "./types";
@@ -54,7 +54,7 @@ export class CachedStatementsStore
     if (!this.#cache.get(action)) {
       this.#cache.set(
         action,
-        this.#store.findAllByAction(action).map((p) => p[SYM_SID])
+        this.#store.findAllByAction(action).map((p) => p.sid)
       );
     }
 

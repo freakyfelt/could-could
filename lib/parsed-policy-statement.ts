@@ -14,13 +14,17 @@ export type ActionsByType = {
   globAll: boolean;
 };
 
-export const SYM_SID = Symbol("PolicyStatementID");
+export type ParsedPolicyStatement = {
+  /** a globally-unique statement identifier */
+  sid: string;
+  /** an optional grouping identifier for things like policy documents */
+  gid: string;
 
-export type ParsedPolicyStatement = PolicyStatement & {
+  effect: PolicyStatement["effect"];
+  constraint: PolicyStatement["constraint"];
   /** paths referenced in the logic with { var: 'my.path' } */
   contextPaths: string[];
   actionsByType: ActionsByType;
-  [SYM_SID]: string;
 };
 
 const LIST_OPS = ["map", "reduce", "filter", "all", "none", "some"];
@@ -80,17 +84,28 @@ export function parsePolicyActions(actions: string[]): ActionsByType {
   return res;
 }
 
+interface ParseOptions {
+  sid?: string;
+  gid?: string;
+}
+
 export function parsePolicyStatement(
   statement: PolicyStatement,
-  sid?: string
+  opts: ParseOptions = {}
 ): ParsedPolicyStatement {
-  const { action, constraint } = statement;
+  const { action, constraint, effect } = statement;
   const actions = Array.isArray(action) ? action : [action];
 
+  const sid = opts.sid ?? randomUUID();
+  const gid = opts.gid ?? sid;
+
   return {
-    ...statement,
+    sid,
+    gid,
+
+    effect,
+    constraint,
     contextPaths: extractVarPaths(constraint),
     actionsByType: parsePolicyActions(actions),
-    [SYM_SID]: sid ?? randomUUID(),
   };
 }

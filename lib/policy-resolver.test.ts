@@ -1,10 +1,9 @@
 import { PolicyResolver } from "./policy-resolver";
+import { allowedContext, deniedContext } from "./__fixtures__/contexts";
 import {
-  allowedContext,
   BasicAllowStatement,
   ContextualAllowStatement,
   ContextualDenyStatement,
-  deniedContext,
   MultipleActionsStatement,
 } from "./__fixtures__/statements";
 

@@ -4,7 +4,7 @@ import {
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "../__fixtures__/statements";
+} from "../__fixtures__/parsed-statements";
 import { IndexedStatementsStore } from "./indexed-statements-store";
 
 describe("IndexedStatementsStore", () => {

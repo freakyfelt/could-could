@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { ParsedPolicyStatement, SYM_SID } from "../parsed-policy-statement";
+import { ParsedPolicyStatement } from "../parsed-policy-statement";
 import { TypedEmitter } from "../utils/events";
 import {
   ParsedStatementsDB,
@@ -46,7 +46,7 @@ export class IndexedStatementsStore
 
   addAll(statements: ParsedPolicyStatement[]) {
     const sids = statements.map((statement) => {
-      const sid = statement[SYM_SID];
+      const sid = statement.sid;
       this.#statements.set(sid, statement);
       return sid;
     });
@@ -105,14 +105,14 @@ export class IndexedStatementsStore
 
     const globAll = statements
       .filter((s) => s.actionsByType.globAll)
-      .map((s) => s[SYM_SID]);
+      .map((s) => s.sid);
     this.#byAction.globAll = [
       ...this.#byAction.globAll.filter((id) => !sids.includes(id)),
       ...globAll,
     ];
 
     const regex = statements.flatMap((s) =>
-      s.actionsByType.regex.map((re): [RegExp, string] => [re, s[SYM_SID]])
+      s.actionsByType.regex.map((re): [RegExp, string] => [re, s.sid])
     );
     this.#byAction.regex = [
       ...this.#byAction.regex.filter(([_regex, id]) => !sids.includes(id)),
@@ -124,7 +124,7 @@ export class IndexedStatementsStore
     statements.forEach((statement) => {
       statement.actionsByType.exact.forEach((action) => {
         const arr = exact.get(action) ?? [];
-        arr.push(statement[SYM_SID]);
+        arr.push(statement.sid);
         exact.set(action, arr);
       });
     });
