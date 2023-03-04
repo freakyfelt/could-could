@@ -30,7 +30,7 @@ You will need a few pieces of information up front when creating a collection of
 ```jsonc
 // example policy stored somewhere that can be consumed at runtime
 {
-  "policies": [
+  "statement": [
     {
       "description": "Allow everyone to create a kitty",
       "action": "kitty:create", // specify a single action

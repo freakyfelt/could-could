@@ -7,7 +7,7 @@ export interface JsonLogicParser {
 export type JsonSchema = JSONSchemaType<unknown>;
 
 export interface PolicyDocument {
-  statement: PolicyStatement[];
+  statement: PolicyStatement | PolicyStatement[];
 }
 
 export interface PolicyStatement {
