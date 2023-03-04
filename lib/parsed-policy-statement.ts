@@ -1,6 +1,7 @@
 import { RulesLogic } from "json-logic-js";
 import { randomUUID } from "node:crypto";
 import { PolicyStatement } from "./types";
+import { arrayify } from "./utils/arr";
 import { traverseRulesLogic } from "./utils/logic";
 import {
   isStringLiteral,
@@ -44,9 +45,7 @@ function extractVarPaths(logic: RulesLogic): string[] {
       }
 
       // syntactic sugar means var could be one of string, [string], or [string, string]
-      const args = Array.isArray(innerLogic.var)
-        ? innerLogic.var
-        : [innerLogic.var];
+      const args = arrayify(innerLogic.var);
       if (typeof args[0] !== "string") {
         throw new Error(
           `var: only path strings are permitted (at ${path.join(".")})`
@@ -94,9 +93,9 @@ export function parsePolicyStatement(
   opts: ParseOptions = {}
 ): ParsedPolicyStatement {
   const { action, constraint, effect } = statement;
-  const actions = Array.isArray(action) ? action : [action];
+  const actions = arrayify(action);
 
-  const sid = opts.sid ?? randomUUID();
+  const sid = opts.sid ?? statement.sid ?? randomUUID();
   const gid = opts.gid ?? sid;
 
   return {
