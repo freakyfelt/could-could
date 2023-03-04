@@ -4,6 +4,9 @@
   "description": "An authorization library built on top of JsonLogic",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">= 16.0.0"
+  },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
@@ -24,7 +27,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
-    "@tsconfig/node17": "^1.0.0",
+    "@tsconfig/node16": "^1.0.3",
     "@types/jest": "^29.2.2",
     "@types/json-logic-js": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
