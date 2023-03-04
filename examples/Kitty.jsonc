@@ -14,7 +14,7 @@
   }
 */
 {
-  "$schema": "../schemas/resource-policy-2023-02.schema.json",
+  "$schema": "../schemas/policy-2023-02.schema.json",
   "actions": ["create", "read", "update", "pet"],
   "statement": [
     {
