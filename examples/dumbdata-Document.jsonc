@@ -15,7 +15,7 @@
   }
 */
 {
-  "$schema": "../schemas/resource-policy-2023-02.schema.json",
+  "$schema": "../schemas/policy-2023-02.schema.json",
   "statement": [
     {
       "description": "Create a dropbox where anyone can create a document, but can't read or update",

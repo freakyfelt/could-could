@@ -1,7 +1,8 @@
 import Ajv, { ValidateFunction } from "ajv";
 import * as jsonLogic from "json-logic-js";
-import * as defaultSchema from "../../schemas/resource-policy-2023-02.schema.json";
+import * as defaultSchema from "../../schemas/policy-2023-02.schema.json";
 import { JsonLogicParser, JsonSchema, PolicyDocument } from "../types";
+import { arrayify } from "../utils/arr";
 import {
   MalformedStatementDetail,
   MalformedPolicyStatementError,
@@ -64,7 +65,7 @@ export class PolicyDocumentValidator {
   private validateConstraints(doc: PolicyDocument): void {
     const invalidStatements: MalformedStatementDetail[] = [];
 
-    doc.statement.forEach((policy) => {
+    arrayify(doc.statement).forEach((policy) => {
       try {
         this.parser.apply(policy.constraint);
       } catch (error) {
