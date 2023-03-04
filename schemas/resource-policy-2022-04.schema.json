@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/freakyfelt/could-could/main/schemas/resource-policy-2022-04.schema.json",
+  "$id": "https://raw.githubusercontent.com/freakyfelt/could-could/main-1.x/schemas/resource-policy-2022-04.schema.json",
   "type": "object",
   "required": ["resourceType", "actions", "definitions"],
   "properties": {
