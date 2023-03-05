@@ -42,7 +42,7 @@ describe("IndexedStatementsStore", () => {
     });
   });
 
-  describe("addGroup", () => {
+  describe("add/deleteGroup", () => {
     let store: IndexedStatementsStore;
 
     beforeEach(() => {
@@ -59,11 +59,27 @@ describe("IndexedStatementsStore", () => {
 
     it("adds the statements to all of the expected store methods", () => {
       store.addGroup(gid, toAdd);
-      expect(store.findAllByAction("read")).toEqual(expected);
-      expect(store.findAllByGID("test1")).toEqual(expected);
+      store.add(MultipleActionsStatement);
+      expect(store.findAllByAction("read")).toEqual([
+        ...expected,
+        MultipleActionsStatement,
+      ]);
+      expect(store.findAllByGID(gid)).toEqual(expected);
 
       const sid = expected[0].sid;
       expect(store.get(sid)).toEqual(expected[0]);
+    });
+
+    it("removes the statements from all of the expected store methods", () => {
+      store.addGroup(gid, toAdd);
+      store.add(MultipleActionsStatement);
+      store.deleteGroup(gid);
+
+      expect(store.findAllByAction("read")).toEqual([MultipleActionsStatement]);
+      expect(store.findAllByGID(gid)).toEqual([]);
+
+      const sid = expected[0].sid;
+      expect(store.get(sid)).toEqual(undefined);
     });
   });
 });
