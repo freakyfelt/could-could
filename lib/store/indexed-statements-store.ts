@@ -188,10 +188,12 @@ export class IndexedStatementsStore
       const existing = this.#byAction.exact.get(action) ?? [];
       const updates = exact.get(action) ?? [];
       const updated = [
-        ...existing.filter((sid) => sids.includes(sid)),
+        ...existing.filter((sid) => !sids.includes(sid)),
         ...updates,
       ];
-      this.#byAction.exact.set(action, updated);
+      updated.length === 0
+        ? this.#byAction.exact.delete(action)
+        : this.#byAction.exact.set(action, updated);
     }
   }
 }
