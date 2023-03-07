@@ -1,6 +1,7 @@
 import { RulesLogic } from "json-logic-js";
 import { randomUUID } from "node:crypto";
 import { PolicyStatement } from "./types";
+import { arrayify } from "./utils/arr";
 import { traverseRulesLogic } from "./utils/logic";
 import {
   isStringLiteral,
@@ -14,13 +15,18 @@ export type ActionsByType = {
   globAll: boolean;
 };
 
-export const SYM_SID = Symbol("PolicyStatementID");
+export type ParsedPolicyStatement = {
+  /** a globally-unique statement identifier */
+  sid: string;
 
-export type ParsedPolicyStatement = PolicyStatement & {
+  /** an optional grouping identifier */
+  gid?: string;
+
+  effect: PolicyStatement["effect"];
+  constraint: PolicyStatement["constraint"];
   /** paths referenced in the logic with { var: 'my.path' } */
   contextPaths: string[];
   actionsByType: ActionsByType;
-  [SYM_SID]: string;
 };
 
 const LIST_OPS = ["map", "reduce", "filter", "all", "none", "some"];
@@ -40,9 +46,7 @@ function extractVarPaths(logic: RulesLogic): string[] {
       }
 
       // syntactic sugar means var could be one of string, [string], or [string, string]
-      const args = Array.isArray(innerLogic.var)
-        ? innerLogic.var
-        : [innerLogic.var];
+      const args = arrayify(innerLogic.var);
       if (typeof args[0] !== "string") {
         throw new Error(
           `var: only path strings are permitted (at ${path.join(".")})`
@@ -80,17 +84,25 @@ export function parsePolicyActions(actions: string[]): ActionsByType {
   return res;
 }
 
+interface ParseOptions {
+  sid?: string;
+}
+
 export function parsePolicyStatement(
   statement: PolicyStatement,
-  sid?: string
+  opts: ParseOptions = {}
 ): ParsedPolicyStatement {
-  const { action, constraint } = statement;
-  const actions = Array.isArray(action) ? action : [action];
+  const { action, constraint, effect } = statement;
+  const actions = arrayify(action);
+
+  const sid = opts.sid ?? statement.sid ?? randomUUID();
 
   return {
-    ...statement,
+    sid,
+
+    effect,
+    constraint,
     contextPaths: extractVarPaths(constraint),
     actionsByType: parsePolicyActions(actions),
-    [SYM_SID]: sid ?? randomUUID(),
   };
 }
