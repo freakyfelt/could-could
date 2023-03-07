@@ -1,5 +1,6 @@
+import uniq from "just-unique";
 import assert from "node:assert";
-import { ParsedPolicyStatement, SYM_SID } from "../parsed-policy-statement";
+import { ParsedPolicyStatement } from "../parsed-policy-statement";
 import { TypedEmitter } from "../utils/events";
 import {
   ParsedStatementsDB,
@@ -11,6 +12,7 @@ import {
 type StatementsDBWithIndex = {
   statements: ParsedStatementsDB;
   byAction: ByActionIndex;
+  byGID: Map<string, string[]>;
 };
 
 const createStatementsDB = (): StatementsDBWithIndex => ({
@@ -20,6 +22,7 @@ const createStatementsDB = (): StatementsDBWithIndex => ({
     globAll: [],
     regex: [],
   },
+  byGID: new Map(),
 });
 
 /**
@@ -31,25 +34,73 @@ export class IndexedStatementsStore
 {
   #statements: ParsedStatementsDB;
   #byAction: ByActionIndex;
+  #byGID: Map<string, string[]>;
 
   constructor(params?: StatementsDBWithIndex) {
     super();
 
-    const { statements, byAction } = params ?? createStatementsDB();
+    const { statements, byAction, byGID } = params ?? createStatementsDB();
     this.#statements = statements;
     this.#byAction = byAction;
+    this.#byGID = byGID;
   }
 
-  add(newStatement: ParsedPolicyStatement) {
-    this.addAll([newStatement]);
+  /**
+   * adds or replaces an individual statement in the store by statement id (sid)
+   *
+   * @param newStatement
+   */
+  set(sid: string, newStatement: ParsedPolicyStatement) {
+    this.addAll([
+      {
+        ...newStatement,
+        sid,
+        gid: undefined,
+      },
+    ]);
   }
 
   addAll(statements: ParsedPolicyStatement[]) {
-    const sids = statements.map((statement) => {
-      const sid = statement[SYM_SID];
-      this.#statements.set(sid, statement);
-      return sid;
-    });
+    const sids = this.#addAll(statements);
+    this.#reindexAll(sids);
+    this.emit("updated", sids);
+  }
+
+  /** adds or replaces a group of statements in the store by group ID (gid) */
+  setGroup(gid: string, statements: ParsedPolicyStatement[]) {
+    const existingSIDs = this.#byGID.get(gid) ?? [];
+    this.#deleteAll(existingSIDs);
+
+    const namespacedStatements = statements.map((s) => ({
+      ...s,
+      gid,
+      sid: [gid, s.sid].join("/"),
+    }));
+
+    const sids = this.#addAll(namespacedStatements);
+    const allSIDs = uniq([...existingSIDs, ...sids]);
+    this.#byGID.set(gid, sids);
+    this.#reindexAll(allSIDs);
+    this.emit("updated", allSIDs);
+  }
+
+  delete(sid: string) {
+    this.deleteAll([sid]);
+  }
+
+  deleteAll(sids: string[]) {
+    this.#deleteAll(sids);
+    this.#reindexAll(sids);
+    this.emit("updated", sids);
+  }
+
+  deleteGroup(gid: string) {
+    const sids = this.#byGID.get(gid);
+    if (!sids) {
+      return;
+    }
+    this.#byGID.delete(gid);
+    this.#deleteAll(sids);
     this.#reindexAll(sids);
     this.emit("updated", sids);
   }
@@ -64,6 +115,25 @@ export class IndexedStatementsStore
 
   findAllByAction(action: string): ParsedPolicyStatement[] {
     return this.#findSidsByAction(action).map((sid) => this.#mustGet(sid));
+  }
+
+  findAllByGID(gid: string): ParsedPolicyStatement[] {
+    return this.#byGID.get(gid)?.map((sid) => this.#mustGet(sid)) ?? [];
+  }
+
+  #addAll(statements: ParsedPolicyStatement[]): string[] {
+    return statements.map((statement) => {
+      const sid = statement.sid;
+      this.#statements.set(sid, statement);
+      return sid;
+    });
+  }
+
+  /** deleteAll removes all sids without reindexing or sending updates */
+  #deleteAll(sids: string[]) {
+    sids.forEach((sid) => {
+      this.#statements.delete(sid);
+    });
   }
 
   #findSidsByAction(action: string): string[] {
@@ -91,6 +161,9 @@ export class IndexedStatementsStore
   }
 
   #reindexAll(sids: string[]) {
+    if (sids.length === 0) {
+      return;
+    }
     const statements: ParsedPolicyStatement[] = [];
 
     sids.forEach((sid) => {
@@ -105,14 +178,14 @@ export class IndexedStatementsStore
 
     const globAll = statements
       .filter((s) => s.actionsByType.globAll)
-      .map((s) => s[SYM_SID]);
+      .map((s) => s.sid);
     this.#byAction.globAll = [
       ...this.#byAction.globAll.filter((id) => !sids.includes(id)),
       ...globAll,
     ];
 
     const regex = statements.flatMap((s) =>
-      s.actionsByType.regex.map((re): [RegExp, string] => [re, s[SYM_SID]])
+      s.actionsByType.regex.map((re): [RegExp, string] => [re, s.sid])
     );
     this.#byAction.regex = [
       ...this.#byAction.regex.filter(([_regex, id]) => !sids.includes(id)),
@@ -124,7 +197,7 @@ export class IndexedStatementsStore
     statements.forEach((statement) => {
       statement.actionsByType.exact.forEach((action) => {
         const arr = exact.get(action) ?? [];
-        arr.push(statement[SYM_SID]);
+        arr.push(statement.sid);
         exact.set(action, arr);
       });
     });
@@ -137,10 +210,12 @@ export class IndexedStatementsStore
       const existing = this.#byAction.exact.get(action) ?? [];
       const updates = exact.get(action) ?? [];
       const updated = [
-        ...existing.filter((sid) => sids.includes(sid)),
+        ...existing.filter((sid) => !sids.includes(sid)),
         ...updates,
       ];
-      this.#byAction.exact.set(action, updated);
+      updated.length === 0
+        ? this.#byAction.exact.delete(action)
+        : this.#byAction.exact.set(action, updated);
     }
   }
 }

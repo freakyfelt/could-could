@@ -1,43 +1,128 @@
+import { Actions } from "../__fixtures__/contexts";
 import {
   BasicAllowStatement,
   GlobAllStatement,
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "../__fixtures__/statements";
+} from "../__fixtures__/parsed-statements";
 import { IndexedStatementsStore } from "./indexed-statements-store";
 
 describe("IndexedStatementsStore", () => {
-  const store = new IndexedStatementsStore();
-  store.addAll([
-    BasicAllowStatement,
-    MultipleActionsStatement,
-    GlobAllStatement,
-    GlobEndStatement,
-    GlobStartStatement,
-  ]);
-
-  it("returns the expected statements for create", () => {
-    const res = store.findAllByAction("create");
-    expect(res).toEqual([
-      GlobAllStatement,
+  describe("findAllByAction", () => {
+    const store = new IndexedStatementsStore();
+    store.addAll([
       BasicAllowStatement,
       MultipleActionsStatement,
+      GlobAllStatement,
+      GlobEndStatement,
+      GlobStartStatement,
     ]);
+
+    it("returns the expected statements for create", () => {
+      const res = store.findAllByAction(Actions.create);
+      expect(res).toEqual([
+        GlobAllStatement,
+        BasicAllowStatement,
+        MultipleActionsStatement,
+      ]);
+    });
+
+    it("returns the expected statements for prefixed actions", () => {
+      const res = store.findAllByAction(Actions.readDocument);
+      expect(res).toEqual([GlobAllStatement, GlobEndStatement]);
+    });
+
+    it("returns the expected statements for postfixed", () => {
+      const res = store.findAllByAction(Actions.signDocuments);
+      expect(res).toEqual([GlobAllStatement, GlobStartStatement]);
+    });
+
+    it("returns the expected statements for read", () => {
+      const res = store.findAllByAction(Actions.read);
+      expect(res).toEqual([GlobAllStatement, MultipleActionsStatement]);
+    });
   });
 
-  it("returns the expected statements for prefixed actions", () => {
-    const res = store.findAllByAction("documents:sign");
-    expect(res).toEqual([GlobAllStatement, GlobEndStatement]);
+  describe("set/delete", () => {
+    let store: IndexedStatementsStore;
+
+    const sid = GlobEndStatement.sid;
+
+    beforeEach(() => {
+      store = new IndexedStatementsStore();
+    });
+
+    it("adds the statement to all of the expected store methods", () => {
+      store.set(sid, GlobEndStatement);
+
+      expect(store.findAllByAction(Actions.createDocument)).toEqual([
+        GlobEndStatement,
+      ]);
+      expect(store.has(sid)).toEqual(true);
+      expect(store.get(sid)).toEqual(GlobEndStatement);
+    });
+
+    it("removes the statement from all of the expected store methods", () => {
+      store.set(sid, GlobEndStatement);
+      store.delete(sid);
+
+      expect(store.findAllByAction(Actions.createDocument)).toEqual([]);
+      expect(store.has(sid)).toEqual(false);
+      expect(store.get(sid)).toEqual(undefined);
+    });
   });
 
-  it("returns the expected statements for postfixed", () => {
-    const res = store.findAllByAction("sign:documents");
-    expect(res).toEqual([GlobAllStatement, GlobStartStatement]);
-  });
+  describe("set/deleteGroup", () => {
+    let store: IndexedStatementsStore;
 
-  it("returns the expected statements for read", () => {
-    const res = store.findAllByAction("read");
-    expect(res).toEqual([GlobAllStatement, MultipleActionsStatement]);
+    beforeEach(() => {
+      store = new IndexedStatementsStore();
+    });
+
+    const gid = "test1";
+    const toAdd = [GlobAllStatement, MultipleActionsStatement];
+    const expected = toAdd.map((s) => ({
+      ...s,
+      gid,
+      sid: [gid, s.sid].join("/"),
+    }));
+
+    it("adds the statements to all of the expected store methods", () => {
+      store.setGroup(gid, toAdd);
+      store.set(MultipleActionsStatement.sid, MultipleActionsStatement);
+      expect(store.findAllByAction(Actions.read)).toEqual([
+        ...expected,
+        MultipleActionsStatement,
+      ]);
+      expect(store.findAllByGID(gid)).toEqual(expected);
+
+      const sid = expected[0].sid;
+      expect(store.get(sid)).toEqual(expected[0]);
+    });
+
+    it("removes the statements from all of the expected store methods", () => {
+      store.setGroup(gid, toAdd);
+      store.set(MultipleActionsStatement.sid, MultipleActionsStatement);
+      store.deleteGroup(gid);
+
+      expect(store.findAllByAction(Actions.read)).toEqual([
+        MultipleActionsStatement,
+      ]);
+      expect(store.findAllByGID(gid)).toEqual([]);
+
+      const sid = expected[0].sid;
+      expect(store.get(sid)).toEqual(undefined);
+    });
+
+    it("quietly succeeds if the group is not present", () => {
+      store.set(MultipleActionsStatement.sid, MultipleActionsStatement);
+      store.deleteGroup(gid);
+
+      expect(store.findAllByAction(Actions.read)).toEqual([
+        MultipleActionsStatement,
+      ]);
+      expect(store.findAllByGID(gid)).toEqual([]);
+    });
   });
 });
