@@ -14,6 +14,7 @@
     "lint": "eslint --ext .ts lib/**/*.ts",
     "prepublishOnly": "npm run build",
     "pretest": "npm run lint",
+    "release:generate": "semantic-release",
     "test": "jest",
     "test:watch": "jest --watch",
     "posttest": "npm run format"
