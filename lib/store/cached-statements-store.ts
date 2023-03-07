@@ -1,6 +1,6 @@
 import LRUCache from "lru-cache";
 import assert from "node:assert";
-import { ParsedPolicyStatement, SYM_SID } from "../parsed-policy-statement";
+import { ParsedPolicyStatement } from "../parsed-policy-statement";
 import { TypedEmitter } from "../utils/events";
 import { IndexedStatementsStore } from "./indexed-statements-store";
 import { PolicyStatementStore, StoreEvents } from "./types";
@@ -34,12 +34,16 @@ export class CachedStatementsStore
     });
   }
 
-  add(statement: ParsedPolicyStatement) {
-    this.#store.add(statement);
+  set(sid: string, statement: ParsedPolicyStatement) {
+    this.#store.set(sid, statement);
   }
 
   addAll(statements: ParsedPolicyStatement[]) {
     this.#store.addAll(statements);
+  }
+
+  setGroup(gid: string, statements: ParsedPolicyStatement[]): void {
+    this.#store.setGroup(gid, statements);
   }
 
   get(sid: string): ParsedPolicyStatement | undefined {
@@ -54,11 +58,15 @@ export class CachedStatementsStore
     if (!this.#cache.get(action)) {
       this.#cache.set(
         action,
-        this.#store.findAllByAction(action).map((p) => p[SYM_SID])
+        this.#store.findAllByAction(action).map((p) => p.sid)
       );
     }
 
     return this.#cache.get(action)?.map((sid) => this.#mustGet(sid)) ?? [];
+  }
+
+  findAllByGID(gid: string): ParsedPolicyStatement[] {
+    return this.#store.findAllByGID(gid);
   }
 
   #mustGet(sid: string): ParsedPolicyStatement {
