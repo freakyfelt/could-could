@@ -45,8 +45,19 @@ export class IndexedStatementsStore
     this.#byGID = byGID;
   }
 
-  add(newStatement: ParsedPolicyStatement) {
-    this.addAll([newStatement]);
+  /**
+   * adds or replaces an individual statement in the store by statement id (sid)
+   *
+   * @param newStatement
+   */
+  set(sid: string, newStatement: ParsedPolicyStatement) {
+    this.addAll([
+      {
+        ...newStatement,
+        sid,
+        gid: undefined,
+      },
+    ]);
   }
 
   addAll(statements: ParsedPolicyStatement[]) {
@@ -55,7 +66,8 @@ export class IndexedStatementsStore
     this.emit("updated", sids);
   }
 
-  addGroup(gid: string, statements: ParsedPolicyStatement[]) {
+  /** adds or replaces a group of statements in the store by group ID (gid) */
+  setGroup(gid: string, statements: ParsedPolicyStatement[]) {
     const existingSIDs = this.#byGID.get(gid) ?? [];
     this.#deleteAll(existingSIDs);
 
@@ -70,6 +82,16 @@ export class IndexedStatementsStore
     this.#byGID.set(gid, sids);
     this.#reindexAll(allSIDs);
     this.emit("updated", allSIDs);
+  }
+
+  delete(sid: string) {
+    this.deleteAll([sid]);
+  }
+
+  deleteAll(sids: string[]) {
+    this.#deleteAll(sids);
+    this.#reindexAll(sids);
+    this.emit("updated", sids);
   }
 
   deleteGroup(gid: string) {

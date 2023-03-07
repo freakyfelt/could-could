@@ -34,16 +34,16 @@ export class CachedStatementsStore
     });
   }
 
-  add(statement: ParsedPolicyStatement) {
-    this.#store.add(statement);
+  set(sid: string, statement: ParsedPolicyStatement) {
+    this.#store.set(sid, statement);
   }
 
   addAll(statements: ParsedPolicyStatement[]) {
     this.#store.addAll(statements);
   }
 
-  addGroup(gid: string, statements: ParsedPolicyStatement[]): void {
-    this.#store.addGroup(gid, statements);
+  setGroup(gid: string, statements: ParsedPolicyStatement[]): void {
+    this.#store.setGroup(gid, statements);
   }
 
   get(sid: string): ParsedPolicyStatement | undefined {

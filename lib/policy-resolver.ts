@@ -56,7 +56,7 @@ export class PolicyResolver {
 
         return parsePolicyStatement(statement, { sid });
       });
-      store.addGroup(gid, parsed);
+      store.setGroup(gid, parsed);
     });
 
     return new PolicyResolver(store, opts);
