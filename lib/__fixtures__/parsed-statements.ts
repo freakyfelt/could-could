@@ -23,3 +23,6 @@ export const ContextualAllowStatement = parsePolicyStatement(
 export const ContextualDenyStatement = parsePolicyStatement(
   statements.ContextualDenyStatement
 );
+export const ContextualGlobStatement = parsePolicyStatement(
+  statements.ContextualGlobStatement
+);

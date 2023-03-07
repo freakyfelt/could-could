@@ -12,3 +12,11 @@ export const deniedContext = {
     groups: ["group5"],
   },
 };
+
+export enum Actions {
+  create = "create",
+  read = "read",
+  createDocument = "documents:createDocument",
+  readDocument = "documents:readDocument",
+  signDocuments = "sign:documents",
+}

@@ -1,4 +1,5 @@
 import { PolicyStatement } from "../types";
+import { Actions } from "./contexts";
 
 export const GlobAllStatement: PolicyStatement = {
   sid: "GlobAllStatement",
@@ -23,21 +24,21 @@ export const GlobEndStatement: PolicyStatement = {
 
 export const BasicAllowStatement: PolicyStatement = {
   sid: "BasicAllowStatement",
-  action: "create",
+  action: Actions.create,
   effect: "allow",
   constraint: true,
 };
 
 export const MultipleActionsStatement: PolicyStatement = {
   sid: "MultipleActionsStatement",
-  action: ["create", "read"],
+  action: [Actions.create, Actions.read],
   effect: "allow",
   constraint: true,
 };
 
 export const ContextualAllowStatement: PolicyStatement = {
   sid: "ContextualAllowStatement",
-  action: "create",
+  action: Actions.create,
   effect: "allow",
   constraint: {
     "===": [{ var: "subject.id" }, { var: "doc.createdBy" }],
@@ -45,7 +46,7 @@ export const ContextualAllowStatement: PolicyStatement = {
 };
 
 export const ContextualDenyStatement: PolicyStatement = {
-  action: "create",
+  action: Actions.create,
   effect: "deny",
   sid: "ContextualDenyStatement",
   constraint: {
@@ -53,9 +54,18 @@ export const ContextualDenyStatement: PolicyStatement = {
   },
 };
 
+export const ContextualGlobStatement: PolicyStatement = {
+  sid: "ContextualGlobStatement",
+  action: "*",
+  effect: "allow",
+  constraint: {
+    "===": [{ var: "subject.id" }, { var: "doc.createdBy" }],
+  },
+};
+
 export const InvalidConstraintStatement: PolicyStatement = {
   sid: "InvalidConstraintStatement",
-  action: "create",
+  action: Actions.create,
   effect: "allow",
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constraint: { foo: "bar" } as any,

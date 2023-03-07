@@ -51,11 +51,9 @@ export class PolicyResolver {
 
       const gid = doc.id ?? randomUUID();
 
-      const parsed = arrayify(doc.statement).map((statement, idx) => {
-        const sid = [gid, statement.sid ?? idx].join("/");
-
-        return parsePolicyStatement(statement, { sid });
-      });
+      const parsed = arrayify(doc.statement).map((statement) =>
+        parsePolicyStatement(statement)
+      );
       store.setGroup(gid, parsed);
     });
 
