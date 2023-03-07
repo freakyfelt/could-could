@@ -2,7 +2,7 @@
 
 name: Publish using semantic-release
 on:
-  repository_dispatch:
+  workflow_dispatch:
     types: [semantic-release]
 
 jobs:
