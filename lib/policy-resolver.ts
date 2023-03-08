@@ -96,6 +96,17 @@ export class PolicyResolver {
   }
 
   /**
+   * returns true if the resolver supports the provided action
+   */
+  has(action: string): boolean {
+    if (this.#allowedActions) {
+      return this.#allowedActions.includes(action);
+    }
+
+    return this.#policyStore.findAllByAction(action).length > 0;
+  }
+
+  /**
    * Determines if an action can be taken given an optional context
    *
    * @param context extra data that can be referenced with { "var": "path.to.resource" }
@@ -105,11 +116,7 @@ export class PolicyResolver {
       return false;
     }
 
-    if (!this.#cache.has(action)) {
-      this.#cache.set(action, this.#compileAction(action));
-    }
-
-    return this.#cache.get(action)?.can(context) ?? false;
+    return this.#cachedAction(action).can(context) ?? false;
   }
 
   /**
@@ -125,11 +132,16 @@ export class PolicyResolver {
       return [];
     }
 
+    return this.#cachedAction(action).explain(context) ?? [];
+  }
+
+  #cachedAction<TContext>(action: string): CompiledFns<TContext> {
+    const fn = this.#cache.get(action) ?? this.#compileAction(action);
     if (!this.#cache.has(action)) {
-      this.#cache.set(action, this.#compileAction(action));
+      this.#cache.set(action, fn);
     }
 
-    return this.#cache.get(action)?.explain(context) ?? [];
+    return fn;
   }
 
   #compileAction<TContext>(action: string): CompiledFns<TContext> {

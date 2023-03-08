@@ -18,6 +18,28 @@ import {
 } from "./__fixtures__/statements";
 
 describe("PolicyParser", () => {
+  describe("has", () => {
+    it("returns true if the action matches a statement", () => {
+      const policies = PolicyResolver.fromStatements([GlobEndStatement]);
+
+      expect(policies.has(Actions.createDocument)).toEqual(true);
+    });
+
+    it("returns false if no statement matches an action", () => {
+      const policies = PolicyResolver.fromStatements([GlobEndStatement]);
+
+      expect(policies.has(Actions.signDocuments)).toEqual(false);
+    });
+
+    it("returns false if allowedActions is specified and the action is not listed", () => {
+      const policies = PolicyResolver.fromStatements([GlobEndStatement], {
+        allowedActions: [Actions.readDocument],
+      });
+
+      expect(policies.has(Actions.createDocument)).toEqual(false);
+    });
+  });
+
   describe("with a basic allow policy", () => {
     const policies = PolicyResolver.fromStatements([BasicAllowStatement]);
 
