@@ -28,6 +28,10 @@ type CompiledFns<TContext> = {
   explain(ctx: TContext): ParsedPolicyStatement[];
 };
 
+type ApplyOptions = {
+  onContextMissing: boolean;
+};
+
 function hasAllPaths(statement: ParsedPolicyStatement, ctx: unknown) {
   if (statement.contextPaths.length === 0) {
     return true;
@@ -140,26 +144,38 @@ export class PolicyResolver {
 
     const explain = (ctx: TContext): ParsedPolicyStatement[] => {
       return [
-        ...deny.filter((statement) => this.#apply(statement, ctx)),
-        ...allow.filter((statement) => this.#apply(statement, ctx)),
+        ...deny.filter((statement) =>
+          this.#apply(statement, ctx, { onContextMissing: true })
+        ),
+        ...allow.filter((statement) =>
+          this.#apply(statement, ctx, { onContextMissing: false })
+        ),
       ];
     };
 
     const can = (ctx: TContext): boolean => {
-      const isDenied = deny.some((statement) => this.#apply(statement, ctx));
+      const isDenied = deny.some((statement) =>
+        this.#apply(statement, ctx, { onContextMissing: true })
+      );
       if (isDenied) {
         return false;
       }
 
-      return allow.some((statement) => this.#apply(statement, ctx));
+      return allow.some((statement) =>
+        this.#apply(statement, ctx, { onContextMissing: false })
+      );
     };
 
     return { can, explain };
   }
 
-  #apply<TContext>(statement: ParsedPolicyStatement, ctx: TContext): boolean {
+  #apply<TContext>(
+    statement: ParsedPolicyStatement,
+    ctx: TContext,
+    opts: ApplyOptions
+  ): boolean {
     if (!hasAllPaths(statement, ctx)) {
-      return false;
+      return opts.onContextMissing;
     }
 
     return this.#parser.apply(statement.constraint, ctx) === true;

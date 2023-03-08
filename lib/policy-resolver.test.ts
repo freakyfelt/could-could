@@ -110,7 +110,13 @@ describe("PolicyParser", () => {
       expect(policies.can(Actions.create, allowedContext)).toEqual(true);
     });
 
-    it("returns false if the call is made without required context", () => {
+    it("returns false if an allow statement is missing a required context", () => {
+      expect(policies.can(Actions.create)).toEqual(false);
+    });
+
+    it("returns false if a deny statement is missing a required context", () => {
+      const policies = PolicyResolver.fromStatements([ContextualDenyStatement]);
+
       expect(policies.can(Actions.create)).toEqual(false);
     });
   });
