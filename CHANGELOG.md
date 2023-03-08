@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/freakyfelt/could-could/compare/v2.0.0...v2.1.0) (2023-03-08)
+
+
+### Features
+
+* trigger a ci workflow ([ca3ebb6](https://github.com/freakyfelt/could-could/commit/ca3ebb61f2f87afd4abed4fe8b32d2158cceaeb8))
+
 # [2.0.0](https://github.com/freakyfelt/could-could/compare/v1.0.0...v2.0.0) (2023-03-08)
 
 
