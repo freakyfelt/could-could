@@ -15,6 +15,7 @@ import { PolicyDocumentValidator } from "./validator";
 interface PolicyResolverOptions {
   /** restrict valid actions to only this list */
   allowedActions?: string[];
+  validator?: PolicyDocumentValidator;
   parser?: JsonLogicParser;
   cache?: LRUCache.Options<string, CompiledFns<unknown>>;
 }
@@ -47,7 +48,7 @@ export class PolicyResolver {
     docs: PolicyDocument[],
     opts: PolicyResolverOptions = {}
   ): PolicyResolver {
-    const validator = new PolicyDocumentValidator();
+    const validator = opts.validator ?? PolicyDocumentValidator.instance;
     const store = new CachedStatementsStore();
 
     docs.forEach((doc) => {

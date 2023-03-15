@@ -24,4 +24,8 @@ export class TypedEmitter<T extends EventMap> implements Emitter<T> {
   emit<K extends EventKey<T>>(eventName: K, params: T[K]) {
     this.emitter.emit(eventName, params);
   }
+
+  removeAllListeners() {
+    this.emitter.removeAllListeners();
+  }
 }
