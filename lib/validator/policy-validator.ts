@@ -16,6 +16,15 @@ interface ValidatorOptions {
 }
 
 export class PolicyDocumentValidator {
+  static #instance: PolicyDocumentValidator;
+
+  static get instance(): PolicyDocumentValidator {
+    if (!this.#instance) {
+      this.#instance = new PolicyDocumentValidator();
+    }
+    return this.#instance;
+  }
+
   private ajv: Ajv;
   private validator: ValidateFunction;
   private parser: JsonLogicParser;
