@@ -28,7 +28,7 @@
     "json-logic-js": "^2.0.2",
     "just-has": "^2.3.0",
     "just-unique": "^4.2.0",
-    "lru-cache": "^7.18.1"
+    "lru-cache": "^9.0.2"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.2",
