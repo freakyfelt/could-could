@@ -1,4 +1,4 @@
-import LRUCache from "lru-cache";
+import { LRUCache } from "lru-cache";
 import assert from "node:assert";
 import { ParsedPolicyStatement } from "../parsed-policy-statement";
 import { TypedEmitter } from "../utils/events";
@@ -6,10 +6,10 @@ import { IndexedStatementsStore } from "./indexed-statements-store";
 import { PolicyStatementStore, StoreEvents } from "./types";
 
 interface CachedStoreOptions {
-  cache?: LRUCache.Options<string, string[]>;
+  cache?: LRUCache.Options<string, string[], never>;
 }
 
-const DEFAULT_CACHE_OPTIONS: LRUCache.Options<string, string[]> = {
+const DEFAULT_CACHE_OPTIONS: LRUCache.Options<string, string[], never> = {
   max: 1000,
 };
 
@@ -21,7 +21,7 @@ export class CachedStatementsStore
   implements PolicyStatementStore
 {
   #store: PolicyStatementStore;
-  #cache: LRUCache<string, string[]>;
+  #cache: LRUCache<string, string[], never>;
 
   constructor(store?: PolicyStatementStore, opts: CachedStoreOptions = {}) {
     super();

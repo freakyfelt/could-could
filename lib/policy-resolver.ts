@@ -1,6 +1,6 @@
 import pathExists from "just-has";
 import jsonLogic from "json-logic-js";
-import LRUCache from "lru-cache";
+import { LRUCache } from "lru-cache";
 import { randomUUID } from "node:crypto";
 import { CachedStatementsStore } from "./store/cached-statements-store";
 import { PolicyStatementStore } from "./store/types";
@@ -17,10 +17,14 @@ interface PolicyResolverOptions {
   allowedActions?: string[];
   validator?: PolicyDocumentValidator;
   parser?: JsonLogicParser;
-  cache?: LRUCache.Options<string, CompiledFns<unknown>>;
+  cache?: LRUCache.Options<string, CompiledFns<unknown>, never>;
 }
 
-const DEFAULT_CACHE_OPTIONS: LRUCache.Options<string, CompiledFns<unknown>> = {
+const DEFAULT_CACHE_OPTIONS: LRUCache.Options<
+  string,
+  CompiledFns<unknown>,
+  never
+> = {
   max: 100,
 };
 
@@ -82,7 +86,7 @@ export class PolicyResolver {
   #allowedActions: string[] | null;
   #policyStore: PolicyStatementStore;
   #parser: JsonLogicParser;
-  #cache: LRUCache<string, CompiledFns<unknown>>;
+  #cache: LRUCache<string, CompiledFns<unknown>, never>;
 
   constructor(
     policyStore: PolicyStatementStore,
