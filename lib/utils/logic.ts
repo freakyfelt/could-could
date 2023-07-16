@@ -16,7 +16,7 @@ type InnerTraverseParams = {
 
 function _traverseRulesLogic(
   logic: RulesLogic,
-  params: InnerTraverseParams
+  params: InnerTraverseParams,
 ): void {
   // we only want Rule objects, not primitives
   if (typeof logic !== "object") {
@@ -64,7 +64,7 @@ function _traverseRulesLogic(
 export function traverseRulesLogic(
   logic: RulesLogic,
   visitor: VisitorFn,
-  operations?: string[]
+  operations?: string[],
 ): void {
   _traverseRulesLogic(logic, { visitor, operations, path: [] });
 }

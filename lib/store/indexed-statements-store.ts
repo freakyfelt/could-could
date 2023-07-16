@@ -185,7 +185,7 @@ export class IndexedStatementsStore
     ];
 
     const regex = statements.flatMap((s) =>
-      s.actionsByType.regex.map((re): [RegExp, string] => [re, s.sid])
+      s.actionsByType.regex.map((re): [RegExp, string] => [re, s.sid]),
     );
     this.#byAction.regex = [
       ...this.#byAction.regex.filter(([_regex, id]) => !sids.includes(id)),

@@ -49,7 +49,7 @@ function extractVarPaths(logic: RulesLogic): string[] {
       const args = arrayify(innerLogic.var);
       if (typeof args[0] !== "string") {
         throw new Error(
-          `var: only path strings are permitted (at ${path.join(".")})`
+          `var: only path strings are permitted (at ${path.join(".")})`,
         );
       }
       if (args.length === 1) {
@@ -57,7 +57,7 @@ function extractVarPaths(logic: RulesLogic): string[] {
         paths.push(args[0]);
       }
     },
-    ["var", ...LIST_OPS]
+    ["var", ...LIST_OPS],
   );
 
   return paths;
@@ -90,7 +90,7 @@ interface ParseOptions {
 
 export function parsePolicyStatement(
   statement: PolicyStatement,
-  opts: ParseOptions = {}
+  opts: ParseOptions = {},
 ): ParsedPolicyStatement {
   const { action, constraint, effect } = statement;
   const actions = arrayify(action);

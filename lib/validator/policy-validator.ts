@@ -31,7 +31,7 @@ export class PolicyDocumentValidator {
 
   constructor(
     schema?: JsonSchema,
-    { validator, parser }: ValidatorOptions = {}
+    { validator, parser }: ValidatorOptions = {},
   ) {
     this.parser = parser ?? jsonLogic;
 
