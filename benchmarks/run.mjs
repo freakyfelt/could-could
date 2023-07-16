@@ -23,7 +23,7 @@ function runSuite(suite) {
             suite: suite.name,
             bench: bench.name,
             err: String(bench.error),
-          })}\n`
+          })}\n`,
         );
       }
 
@@ -51,7 +51,7 @@ export function run() {
     `# could-could performance
 
 Performed on: ${new Date().toISOString()}
-`
+`,
   );
 
   suites.forEach((suite) => runSuite(suite));

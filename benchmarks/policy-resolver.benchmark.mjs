@@ -34,7 +34,7 @@ indexed.addAll(
     ContextualGlobAllDenyStatement,
     GlobStartStatement,
     MultipleActionsStatement,
-  ].map((s) => parsePolicyStatement(s))
+  ].map((s) => parsePolicyStatement(s)),
 );
 
 const cached = new CachedStatementsStore(indexed);
@@ -49,7 +49,7 @@ indexedNoCtx.addAll(
     GlobEndStatement,
     GlobStartStatement,
     MultipleActionsStatement,
-  ].map((s) => parsePolicyStatement(s))
+  ].map((s) => parsePolicyStatement(s)),
 );
 const cachedNoCtx = new CachedStatementsStore(indexedNoCtx);
 
@@ -75,43 +75,43 @@ const withResolver = (resolver, expected, action, ctx) => {
 const addActionTests = (suite, action, label) => {
   suite
     .add(`${label}:new:uncached:ctx:allow`, () =>
-      withNewResolver(indexed, true, action, allowContext)
+      withNewResolver(indexed, true, action, allowContext),
     )
     .add(`${label}:new:cached:ctx:allow`, () =>
-      withNewResolver(cached, true, action, allowContext)
+      withNewResolver(cached, true, action, allowContext),
     )
     .add(`${label}:new:uncached:ctx:deny`, () =>
-      withNewResolver(indexed, false, action, denyContext)
+      withNewResolver(indexed, false, action, denyContext),
     )
     .add(`${label}:new:cached:ctx:deny`, () =>
-      withNewResolver(cached, false, action, denyContext)
+      withNewResolver(cached, false, action, denyContext),
     )
 
     .add(`${label}:new:uncached:noctx:allow`, () =>
-      withNewResolver(indexedNoCtx, true, action)
+      withNewResolver(indexedNoCtx, true, action),
     )
     .add(`${label}:new:cached:noctx:allow`, () =>
-      withNewResolver(cachedNoCtx, true, action)
+      withNewResolver(cachedNoCtx, true, action),
     )
 
     .add(`${label}:instance:uncached:ctx:allow`, () =>
-      withResolver(resUncached, true, action, allowContext)
+      withResolver(resUncached, true, action, allowContext),
     )
     .add(`${label}:instance:cached:ctx:allow`, () =>
-      withResolver(resCached, true, action, allowContext)
+      withResolver(resCached, true, action, allowContext),
     )
     .add(`${label}:instance:uncached:ctx:deny`, () =>
-      withResolver(resUncached, false, action, denyContext)
+      withResolver(resUncached, false, action, denyContext),
     )
     .add(`${label}:instance:cached:ctx:deny`, () =>
-      withResolver(resCached, false, action, denyContext)
+      withResolver(resCached, false, action, denyContext),
     )
 
     .add(`${label}:instance:uncached:noctx:allow`, () =>
-      withResolver(resUncachedNoCtx, true, action)
+      withResolver(resUncachedNoCtx, true, action),
     )
     .add(`${label}:instance:cached:noctx:allow`, () =>
-      withResolver(resCachedNoCtx, true, action)
+      withResolver(resCachedNoCtx, true, action),
     );
 };
 
@@ -119,16 +119,16 @@ export function buildPolicyResolverBenchmarks() {
   const suite = new Benchmark.Suite("PolicyResolver Benchmarks");
   suite
     .add("globAll:new:uncached:ctx:allow", () =>
-      withNewResolver(indexed, true, "anything", allowAllContext)
+      withNewResolver(indexed, true, "anything", allowAllContext),
     )
     .add("globAll:new:cached:ctx:allow", () =>
-      withNewResolver(cached, true, "anything", allowAllContext)
+      withNewResolver(cached, true, "anything", allowAllContext),
     )
     .add("globAll:instance:uncached:ctx:deny", () =>
-      withResolver(resUncached, false, "anything", denyAllContext)
+      withResolver(resUncached, false, "anything", denyAllContext),
     )
     .add("globAll:instance:cached:ctx:deny", () =>
-      withResolver(resCached, false, "anything", denyAllContext)
+      withResolver(resCached, false, "anything", denyAllContext),
     );
   addActionTests(suite, "documents:createDocument", "globStart");
   addActionTests(suite, "create", "exact");

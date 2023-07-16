@@ -50,7 +50,7 @@ function hasAllPaths(statement: ParsedPolicyStatement, ctx: unknown) {
 export class PolicyResolver {
   static fromDocuments(
     docs: PolicyDocument[],
-    opts: PolicyResolverOptions = {}
+    opts: PolicyResolverOptions = {},
   ): PolicyResolver {
     const validator = opts.validator ?? PolicyDocumentValidator.instance;
     const store = new CachedStatementsStore();
@@ -61,7 +61,7 @@ export class PolicyResolver {
       const gid = doc.id ?? randomUUID();
 
       const parsed = arrayify(doc.statement).map((statement) =>
-        parsePolicyStatement(statement)
+        parsePolicyStatement(statement),
       );
       store.setGroup(gid, parsed);
     });
@@ -71,10 +71,10 @@ export class PolicyResolver {
 
   static fromStatements(
     statements: PolicyStatement[],
-    opts: PolicyResolverOptions = {}
+    opts: PolicyResolverOptions = {},
   ): PolicyResolver {
     const parsed = statements.map((statement) =>
-      parsePolicyStatement(statement)
+      parsePolicyStatement(statement),
     );
 
     const store = new CachedStatementsStore();
@@ -90,7 +90,7 @@ export class PolicyResolver {
 
   constructor(
     policyStore: PolicyStatementStore,
-    opts: PolicyResolverOptions = {}
+    opts: PolicyResolverOptions = {},
   ) {
     this.#allowedActions = opts.allowedActions ?? null;
     this.#parser = opts.parser ?? jsonLogic;
@@ -124,7 +124,7 @@ export class PolicyResolver {
    */
   explain<TContext = unknown>(
     action: string,
-    context?: TContext
+    context?: TContext,
   ): ParsedPolicyStatement[] {
     if (this.#allowedActions && !this.#allowedActions.includes(action)) {
       return [];
@@ -150,24 +150,24 @@ export class PolicyResolver {
     const explain = (ctx: TContext): ParsedPolicyStatement[] => {
       return [
         ...deny.filter((statement) =>
-          this.#apply(statement, ctx, { onContextMissing: true })
+          this.#apply(statement, ctx, { onContextMissing: true }),
         ),
         ...allow.filter((statement) =>
-          this.#apply(statement, ctx, { onContextMissing: false })
+          this.#apply(statement, ctx, { onContextMissing: false }),
         ),
       ];
     };
 
     const can = (ctx: TContext): boolean => {
       const isDenied = deny.some((statement) =>
-        this.#apply(statement, ctx, { onContextMissing: true })
+        this.#apply(statement, ctx, { onContextMissing: true }),
       );
       if (isDenied) {
         return false;
       }
 
       return allow.some((statement) =>
-        this.#apply(statement, ctx, { onContextMissing: false })
+        this.#apply(statement, ctx, { onContextMissing: false }),
       );
     };
 
@@ -177,7 +177,7 @@ export class PolicyResolver {
   #apply<TContext>(
     statement: ParsedPolicyStatement,
     ctx: TContext,
-    opts: ApplyOptions
+    opts: ApplyOptions,
   ): boolean {
     if (!hasAllPaths(statement, ctx)) {
       return opts.onContextMissing;

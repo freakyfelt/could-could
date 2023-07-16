@@ -127,7 +127,7 @@ describe("PolicyParser", () => {
 
     beforeEach(() => {
       const parsed = [ContextualAllowStatement, ContextualDenyStatement].map(
-        (s) => parsePolicyStatement(s)
+        (s) => parsePolicyStatement(s),
       );
       store = new IndexedStatementsStore();
       store.addAll(parsed);

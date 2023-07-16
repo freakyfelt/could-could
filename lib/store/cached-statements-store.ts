@@ -58,7 +58,7 @@ export class CachedStatementsStore
     if (!this.#cache.get(action)) {
       this.#cache.set(
         action,
-        this.#store.findAllByAction(action).map((p) => p.sid)
+        this.#store.findAllByAction(action).map((p) => p.sid),
       );
     }
 

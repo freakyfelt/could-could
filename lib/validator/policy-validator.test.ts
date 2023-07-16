@@ -31,7 +31,7 @@ describe("validateResourcePolicy", () => {
   describe("constraint validations", () => {
     it("throws when a constraint is unparseable", () => {
       expect(() => validator.validate(InvalidConstraintPolicy)).toThrowError(
-        MalformedPolicyStatementError
+        MalformedPolicyStatementError,
       );
     });
   });
