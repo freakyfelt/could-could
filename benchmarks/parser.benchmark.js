@@ -5,7 +5,7 @@ import {
   GlobAllStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "./__fixtures__/statements.mjs";
+} from "./__fixtures__/statements.js";
 
 export function buildParserBenchmarks() {
   return new Benchmark.Suite("parsePolicyStatement Benchmarks")

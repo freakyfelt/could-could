@@ -86,6 +86,7 @@ export function parsePolicyActions(actions: string[]): ActionsByType {
 
 interface ParseOptions {
   sid?: string;
+  gid?: string;
 }
 
 export function parsePolicyStatement(
@@ -96,8 +97,10 @@ export function parsePolicyStatement(
   const actions = arrayify(action);
 
   const sid = opts.sid ?? statement.sid ?? randomUUID();
+  const gid = opts.gid;
 
   return {
+    gid,
     sid,
 
     effect,

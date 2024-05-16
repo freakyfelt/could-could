@@ -1,3 +1,4 @@
+import assert from "node:assert";
 import { parsePolicyStatement } from "./parsed-policy-statement.js";
 import { PolicyResolver } from "./policy-resolver.js";
 import { IndexedStatementsStore } from "./store/index.js";
@@ -22,11 +23,11 @@ describe("PolicyParser", () => {
     const policies = PolicyResolver.fromStatements([BasicAllowStatement]);
 
     it("returns true for the create action", () => {
-      expect(policies.can(Actions.create)).toEqual(true);
+      assert.deepEqual(policies.can(Actions.create), true);
     });
 
     it("returns false for another defined action", () => {
-      expect(policies.can(Actions.read)).toEqual(false);
+      assert.deepEqual(policies.can(Actions.read), false);
     });
   });
 
@@ -36,12 +37,12 @@ describe("PolicyParser", () => {
 
     it("returns true for both actions", () => {
       allowed.forEach((action) => {
-        expect(policies.can(action)).toEqual(true);
+        assert.deepEqual(policies.can(action), true);
       });
     });
 
     it("returns false for any other action", () => {
-      expect(policies.can("should_not_exist")).toEqual(false);
+      assert.deepEqual(policies.can("should_not_exist"), false);
     });
   });
 
@@ -53,19 +54,19 @@ describe("PolicyParser", () => {
     ]);
 
     it("matches actions matching the glob end", () => {
-      expect(policies.can(Actions.createDocument)).toEqual(true);
-      expect(policies.can(Actions.readDocument)).toEqual(true);
-      expect(policies.can(`${Actions.readDocument}aaaaaaaa`)).toEqual(true);
+      assert.deepEqual(policies.can(Actions.createDocument), true);
+      assert.deepEqual(policies.can(Actions.readDocument), true);
+      assert.deepEqual(policies.can(`${Actions.readDocument}aaaaaaaa`), true);
     });
 
     it("matches actions matching the glob start", () => {
-      expect(policies.can(Actions.signDocuments)).toEqual(true);
-      expect(policies.can(`aaaaaa${Actions.signDocuments}`)).toEqual(true);
+      assert.deepEqual(policies.can(Actions.signDocuments), true);
+      assert.deepEqual(policies.can(`aaaaaa${Actions.signDocuments}`), true);
     });
 
     it("returns true for the contextual glob", () => {
-      expect(policies.can(Actions.read)).toEqual(false);
-      expect(policies.can(Actions.read, allowedContext)).toEqual(true);
+      assert.deepEqual(policies.can(Actions.read), false);
+      assert.deepEqual(policies.can(Actions.read, allowedContext), true);
     });
 
     describe("with an allowed actions list provided", () => {
@@ -75,8 +76,8 @@ describe("PolicyParser", () => {
       });
 
       it("returns false for unknown actions", () => {
-        expect(policies.can(Actions.readDocument)).toEqual(true);
-        expect(policies.can(`${Actions.readDocument}aaaaaaaa`)).toEqual(false);
+        assert.equal(policies.can(Actions.readDocument), true);
+        assert.equal(policies.can(`${Actions.readDocument}aaaaaaaa`), false);
       });
     });
   });
@@ -88,11 +89,11 @@ describe("PolicyParser", () => {
     ]);
 
     it("rejects a subject that matches the deny criteria", () => {
-      expect(policies.can(Actions.create, deniedContext)).toEqual(false);
+      assert.equal(policies.can(Actions.create, deniedContext), false);
     });
 
     it("allows a subject that does not match the deny criteria", () => {
-      expect(policies.can(Actions.create, allowedContext)).toEqual(true);
+      assert.equal(policies.can(Actions.create, allowedContext), true);
     });
   });
 
@@ -103,21 +104,21 @@ describe("PolicyParser", () => {
     ]);
 
     it("rejects a subject that matches the deny criteria", () => {
-      expect(policies.can(Actions.create, deniedContext)).toEqual(false);
+      assert.equal(policies.can(Actions.create, deniedContext), false);
     });
 
     it("allows a subject that does not match the deny criteria but matches the allow criteria", () => {
-      expect(policies.can(Actions.create, allowedContext)).toEqual(true);
+      assert.equal(policies.can(Actions.create, allowedContext), true);
     });
 
     it("returns false if an allow statement is missing a required context", () => {
-      expect(policies.can(Actions.create)).toEqual(false);
+      assert.deepEqual(policies.can(Actions.create), false);
     });
 
     it("returns false if a deny statement is missing a required context", () => {
       const policies = PolicyResolver.fromStatements([ContextualDenyStatement]);
 
-      expect(policies.can(Actions.create)).toEqual(false);
+      assert.deepEqual(policies.can(Actions.create), false);
     });
   });
 
@@ -138,8 +139,8 @@ describe("PolicyParser", () => {
     it("caches the evaluator for future executions", () => {
       const spy = jest.spyOn(store, "findAllByAction");
 
-      expect(resolver.can(Actions.create, allowedContext)).toEqual(true);
-      expect(resolver.can(Actions.create, allowedContext)).toEqual(true);
+      assert.deepEqual(resolver.can(Actions.create, allowedContext), true);
+      assert.deepEqual(resolver.can(Actions.create, allowedContext), true);
 
       expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -147,12 +148,12 @@ describe("PolicyParser", () => {
     it("resets the cache on store updates", () => {
       const spy = jest.spyOn(store, "findAllByAction");
 
-      expect(resolver.can(Actions.create, allowedContext)).toEqual(true);
+      assert.equal(resolver.can(Actions.create, allowedContext), true);
       expect(spy).toHaveBeenCalledTimes(1);
 
       store.delete("ContextualAllowStatement");
 
-      expect(resolver.can(Actions.create, allowedContext)).toEqual(false);
+      assert.equal(resolver.can(Actions.create, allowedContext), false);
       expect(spy).toHaveBeenCalledTimes(2);
     });
   });

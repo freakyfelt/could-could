@@ -1,3 +1,4 @@
+import assert from "node:assert";
 import { PolicyDocumentValidator } from "./policy-validator.js";
 import { MalformedPolicyStatementError } from "./errors.js";
 import {
@@ -30,7 +31,8 @@ describe("validateResourcePolicy", () => {
 
   describe("constraint validations", () => {
     it("throws when a constraint is unparseable", () => {
-      expect(() => validator.validate(InvalidConstraintPolicy)).toThrowError(
+      assert.throws(
+        () => validator.validate(InvalidConstraintPolicy),
         MalformedPolicyStatementError,
       );
     });

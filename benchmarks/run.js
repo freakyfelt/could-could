@@ -1,6 +1,6 @@
 import process, { stderr, stdout } from "node:process";
 import { buildParserBenchmarks } from "./parser.benchmark.mjs";
-import { buildPolicyDocumentValidatorBenchmarks } from "./validator.benchmark.mjs";
+import { buildPolicyDocumentValidatorBenchmarks } from "./validator.benchmark.js";
 import { buildPolicyResolverBenchmarks } from "./policy-resolver.benchmark.mjs";
 
 /** @param {import('benchmark').Suite} suite */

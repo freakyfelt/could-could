@@ -19,7 +19,7 @@ import {
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "./__fixtures__/statements.mjs";
+} from "./__fixtures__/statements.js";
 import { parsePolicyStatement } from "../dist/lib/parsed-policy-statement.js";
 import assert from "assert";
 

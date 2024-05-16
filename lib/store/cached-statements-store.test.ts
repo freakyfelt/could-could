@@ -1,13 +1,13 @@
-import { CachedStatementsStore } from "./cached-statements-store";
-import { IndexedStatementsStore } from "./indexed-statements-store";
+import { CachedStatementsStore } from "./cached-statements-store.js";
+import { IndexedStatementsStore } from "./indexed-statements-store.js";
 import {
   BasicAllowStatement,
   ContextualAllowStatement,
   ContextualDenyStatement,
   GlobAllStatement,
   GlobEndStatement,
-} from "../__fixtures__/parsed-statements";
-import { Actions } from "../__fixtures__/contexts";
+} from "../__fixtures__/parsed-statements.js";
+import { Actions } from "../__fixtures__/contexts.js";
 
 describe("CachedStatementsStore", () => {
   let source: IndexedStatementsStore;

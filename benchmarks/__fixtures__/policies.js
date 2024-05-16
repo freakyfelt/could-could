@@ -5,7 +5,7 @@ import {
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "./statements.mjs";
+} from "./statements.js";
 
 export const ComplexPolicy = {
   statement: [

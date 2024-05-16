@@ -11,15 +11,21 @@
   "scripts": {
     "benchmark": "node benchmarks/run.mjs > benchmarks/results.md",
     "build": "npm run clean && tsc -p tsconfig.build.json",
+    "build:check": "tsc --noEmit",
+    "ci": "npm run pretest:ci && npm run test:ci && npm run posttest:ci",
     "clean": "rm -rf dist",
     "format": "prettier -w lib benchmarks",
-    "lint": "eslint --ext .ts lib/**/*.ts benchmarks/**/*.mjs",
+    "format:check": "prettier -c lib benchmarks",
+    "lint": "eslint --ext .ts,.js lib benchmarks",
+    "lint:fix": "eslint --fix --ext .ts,.js lib benchmarks",
     "prepublishOnly": "npm run build",
-    "pretest": "npm run lint",
+    "pretest:ci": "npm run build:check",
+    "posttest": "npm run lint:fix && npm run format",
+    "posttest:ci": "npm run lint && npm run format:check",
     "release:generate": "semantic-release",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "posttest": "npm run format"
+    "test:ci": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "Bruce Felt",
@@ -52,6 +58,7 @@
     "semantic-release": "^23.0.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.7.0",
+    "tsx": "^4.10.3",
     "typescript": "^5.4.5"
   }
 }
