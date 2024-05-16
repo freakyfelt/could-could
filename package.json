@@ -9,7 +9,7 @@
     "node": ">= 18.0.0"
   },
   "scripts": {
-    "benchmark": "node benchmarks/run.mjs > benchmarks/results.md",
+    "benchmark": "tsx benchmarks/run.ts > benchmarks/results.md",
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "build:check": "tsc --noEmit",
     "ci": "npm run pretest:ci && npm run test:ci && npm run posttest:ci",

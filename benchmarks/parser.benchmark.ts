@@ -1,5 +1,5 @@
 import Benchmark from "benchmark";
-import { parsePolicyStatement } from "../dist/lib/parsed-policy-statement.js";
+import { parsePolicyStatement } from "../index.js";
 import {
   BasicAllowStatement,
   GlobAllStatement,

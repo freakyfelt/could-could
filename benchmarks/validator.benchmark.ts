@@ -1,5 +1,5 @@
 import Benchmark from "benchmark";
-import { PolicyDocumentValidator } from "../dist/lib/validator/policy-validator.js";
+import { PolicyDocumentValidator } from "../index.js";
 import { ComplexPolicy, GlobAllPolicy } from "./__fixtures__/policies.js";
 
 const validator = new PolicyDocumentValidator();

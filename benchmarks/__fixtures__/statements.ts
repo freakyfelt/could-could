@@ -1,39 +1,41 @@
-export const GlobAllStatement = {
+import type { PolicyStatement } from "../../index.js";
+
+export const GlobAllStatement: PolicyStatement = {
   sid: "GlobAllStatement",
   action: "*",
   effect: "allow",
   constraint: true,
 };
 
-export const GlobStartStatement = {
+export const GlobStartStatement: PolicyStatement = {
   sid: "GlobStartStatement",
   action: "*:documents",
   effect: "allow",
   constraint: true,
 };
 
-export const GlobEndStatement = {
+export const GlobEndStatement: PolicyStatement = {
   sid: "GlobEndStatement",
   action: "documents:*",
   effect: "allow",
   constraint: true,
 };
 
-export const BasicAllowStatement = {
+export const BasicAllowStatement: PolicyStatement = {
   sid: "BasicAllowStatement",
   action: "create",
   effect: "allow",
   constraint: true,
 };
 
-export const MultipleActionsStatement = {
+export const MultipleActionsStatement: PolicyStatement = {
   sid: "MultipleActionsStatement",
   action: ["create", "read"],
   effect: "allow",
   constraint: true,
 };
 
-export const ContextualAllowStatement = {
+export const ContextualAllowStatement: PolicyStatement = {
   sid: "ContextualAllowStatement",
   action: "create",
   effect: "allow",
@@ -42,7 +44,7 @@ export const ContextualAllowStatement = {
   },
 };
 
-export const ContextualGlobAllowStatement = {
+export const ContextualGlobAllowStatement: PolicyStatement = {
   sid: "ContextualGlobAllowStatement",
   action: "documents:*",
   effect: "allow",
@@ -51,7 +53,7 @@ export const ContextualGlobAllowStatement = {
   },
 };
 
-export const ContextualGlobAllAllowStatement = {
+export const ContextualGlobAllAllowStatement: PolicyStatement = {
   sid: "ContextualGlobAllAllowStatement",
   action: "*",
   effect: "allow",
@@ -60,7 +62,7 @@ export const ContextualGlobAllAllowStatement = {
   },
 };
 
-export const ContextualDenyStatement = {
+export const ContextualDenyStatement: PolicyStatement = {
   sid: "ContextualDenyStatement",
   action: "create",
   effect: "deny",
@@ -69,7 +71,7 @@ export const ContextualDenyStatement = {
   },
 };
 
-export const ContextualGlobDenyStatement = {
+export const ContextualGlobDenyStatement: PolicyStatement = {
   sid: "ContextualGlobDenyStatement",
   action: "documents:*",
   effect: "deny",
@@ -78,7 +80,7 @@ export const ContextualGlobDenyStatement = {
   },
 };
 
-export const ContextualGlobAllDenyStatement = {
+export const ContextualGlobAllDenyStatement: PolicyStatement = {
   sid: "ContextualGlobAllDenyStatement",
   action: "*",
   effect: "deny",
@@ -87,7 +89,7 @@ export const ContextualGlobAllDenyStatement = {
   },
 };
 
-const toContext = (subjectId) => ({
+const toContext = (subjectId: string) => ({
   subject: {
     id: subjectId,
   },
@@ -98,6 +100,9 @@ const toContext = (subjectId) => ({
     globDeniedBy: "globDenied",
   },
 });
+
+export type BencharkContext = ReturnType<typeof toContext>;
+
 export const allowContext = toContext("allowed");
 export const denyContext = toContext("denied");
 export const allowAllContext = toContext("globAllowed");

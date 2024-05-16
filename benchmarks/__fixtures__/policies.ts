@@ -1,3 +1,4 @@
+import { PolicyDocument } from "../../index.js";
 import {
   ContextualAllowStatement,
   ContextualDenyStatement,
@@ -7,7 +8,7 @@ import {
   MultipleActionsStatement,
 } from "./statements.js";
 
-export const ComplexPolicy = {
+export const ComplexPolicy: PolicyDocument = {
   statement: [
     GlobAllStatement,
     GlobStartStatement,
@@ -18,6 +19,6 @@ export const ComplexPolicy = {
   ],
 };
 
-export const GlobAllPolicy = {
+export const GlobAllPolicy: PolicyDocument = {
   statement: [GlobAllStatement],
 };
