@@ -1,11 +1,11 @@
-import { parsePolicyStatement } from "./parsed-policy-statement";
-import { PolicyResolver } from "./policy-resolver";
-import { IndexedStatementsStore } from "./store";
+import { parsePolicyStatement } from "./parsed-policy-statement.js";
+import { PolicyResolver } from "./policy-resolver.js";
+import { IndexedStatementsStore } from "./store/index.js";
 import {
   Actions,
   allowedContext,
   deniedContext,
-} from "./__fixtures__/contexts";
+} from "./__fixtures__/contexts.js";
 import {
   BasicAllowStatement,
   ContextualAllowStatement,
@@ -15,7 +15,7 @@ import {
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "./__fixtures__/statements";
+} from "./__fixtures__/statements.js";
 
 describe("PolicyParser", () => {
   describe("with a basic allow policy", () => {

@@ -1,4 +1,4 @@
-import type { PolicyStatement, PolicyDocument } from "../types";
+import type { PolicyStatement, PolicyDocument } from "../types.js";
 
 export abstract class ValidatorError extends Error {}
 

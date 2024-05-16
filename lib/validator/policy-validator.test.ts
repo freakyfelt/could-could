@@ -1,15 +1,15 @@
-import { PolicyDocumentValidator } from "./policy-validator";
-import { MalformedPolicyStatementError } from "./errors";
+import { PolicyDocumentValidator } from "./policy-validator.js";
+import { MalformedPolicyStatementError } from "./errors.js";
 import {
   BasicResourcePolicy,
   InvalidConstraintPolicy,
   MultipleActionsPolicy,
-} from "../__fixtures__/policies";
+} from "../__fixtures__/policies.js";
 import {
   GlobAllStatement,
   GlobEndStatement,
   GlobStartStatement,
-} from "../__fixtures__/statements";
+} from "../__fixtures__/statements.js";
 
 describe("validateResourcePolicy", () => {
   const validator = new PolicyDocumentValidator();

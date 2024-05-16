@@ -1,13 +1,13 @@
 import uniq from "just-unique";
 import assert from "node:assert";
-import { ParsedPolicyStatement } from "../parsed-policy-statement";
-import { TypedEmitter } from "../utils/events";
+import { ParsedPolicyStatement } from "../parsed-policy-statement.js";
+import { TypedEmitter } from "../utils/events.js";
 import {
   ParsedStatementsDB,
   ByActionIndex,
   PolicyStatementStore,
   StoreEvents,
-} from "./types";
+} from "./types.js";
 
 type StatementsDBWithIndex = {
   statements: ParsedStatementsDB;

@@ -2,15 +2,15 @@ import pathExists from "just-has";
 import jsonLogic from "json-logic-js";
 import { LRUCache } from "lru-cache";
 import { randomUUID } from "node:crypto";
-import { CachedStatementsStore } from "./store/cached-statements-store";
-import { PolicyStatementStore } from "./store/types";
+import { CachedStatementsStore } from "./store/cached-statements-store.js";
+import { PolicyStatementStore } from "./store/types.js";
 import {
   ParsedPolicyStatement,
   parsePolicyStatement,
-} from "./parsed-policy-statement";
-import { JsonLogicParser, PolicyDocument, PolicyStatement } from "./types";
-import { arrayify } from "./utils/arr";
-import { PolicyDocumentValidator } from "./validator";
+} from "./parsed-policy-statement.js";
+import { JsonLogicParser, PolicyDocument, PolicyStatement } from "./types.js";
+import { arrayify } from "./utils/arr.js";
+import { PolicyDocumentValidator } from "./validator/index.js";
 
 interface PolicyResolverOptions {
   /** restrict valid actions to only this list */
