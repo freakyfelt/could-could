@@ -1,4 +1,5 @@
 import assert from "node:assert";
+import { describe, it } from "node:test";
 import { PolicyDocumentValidator } from "./policy-validator.js";
 import { MalformedPolicyStatementError } from "./errors.js";
 import {

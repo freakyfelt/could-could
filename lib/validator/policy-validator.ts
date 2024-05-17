@@ -1,5 +1,5 @@
 import { Ajv, ValidateFunction } from "ajv";
-import * as jsonLogic from "json-logic-js";
+import jsonLogic from "json-logic-js";
 import * as defaultSchema from "../../schemas/policy-2023-02.schema.json";
 import { JsonLogicParser, JsonSchema, PolicyDocument } from "../types.js";
 import { arrayify } from "../utils/arr.js";

@@ -2,8 +2,6 @@
   "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true,
-    // TODO REMOVE
-    "esModuleInterop": true,
   },
   "exclude": ["dist"]
 }

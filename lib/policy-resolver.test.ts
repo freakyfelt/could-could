@@ -1,4 +1,5 @@
 import assert from "node:assert";
+import { describe, it, mock } from "node:test";
 import { parsePolicyStatement } from "./parsed-policy-statement.js";
 import { PolicyResolver } from "./policy-resolver.js";
 import { IndexedStatementsStore } from "./store/index.js";
@@ -137,24 +138,24 @@ describe("PolicyParser", () => {
     });
 
     it("caches the evaluator for future executions", () => {
-      const spy = jest.spyOn(store, "findAllByAction");
+      const spy = mock.method(store, "findAllByAction");
 
       assert.deepEqual(resolver.can(Actions.create, allowedContext), true);
       assert.deepEqual(resolver.can(Actions.create, allowedContext), true);
 
-      expect(spy).toHaveBeenCalledTimes(1);
+      assert.equal(spy.mock.callCount(), 1);
     });
 
     it("resets the cache on store updates", () => {
-      const spy = jest.spyOn(store, "findAllByAction");
+      const spy = mock.method(store, "findAllByAction");
 
       assert.equal(resolver.can(Actions.create, allowedContext), true);
-      expect(spy).toHaveBeenCalledTimes(1);
+      assert.equal(spy.mock.callCount(), 1);
 
       store.delete("ContextualAllowStatement");
 
       assert.equal(resolver.can(Actions.create, allowedContext), false);
-      expect(spy).toHaveBeenCalledTimes(2);
+      assert.equal(spy.mock.callCount(), 2);
     });
   });
 });
