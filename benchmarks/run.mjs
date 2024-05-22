@@ -1,4 +1,4 @@
-import { stderr, stdout } from "node:process";
+import process, { stderr, stdout } from "node:process";
 import { buildParserBenchmarks } from "./parser.benchmark.mjs";
 import { buildPolicyDocumentValidatorBenchmarks } from "./validator.benchmark.mjs";
 import { buildPolicyResolverBenchmarks } from "./policy-resolver.benchmark.mjs";
@@ -50,7 +50,10 @@ export function run() {
   stdout.write(
     `# could-could performance
 
-Performed on: ${new Date().toISOString()}
+Performed on: ${new Date().toDateString()}
+
+Node version: ${process.version}
+Platform/Architecture: ${process.platform}/${process.arch}
 `,
   );
 

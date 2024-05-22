@@ -1,56 +1,59 @@
 # could-could performance
 
-Performed on: 2023-03-15T01:24:20.614Z
+Performed on: Tue May 21 2024
+
+Node version: v18.20.3
+Platform/Architecture: darwin/arm64
 
 ## PolicyResolver Benchmarks
 
-| Test Name                               | Pass/Fail | ops/sec               | variance | samples (n) |
-| --------------------------------------- | --------- | --------------------- | -------- | ----------- |
-| globAll:new:uncached:ctx:allow          | PASS      | 78,252.612 ops/sec    | ±4.29%   | 78 samples  |
-| globAll:new:cached:ctx:allow            | PASS      | 84,341.614 ops/sec    | ±3.25%   | 80 samples  |
-| globAll:instance:uncached:ctx:deny      | PASS      | 666,500.425 ops/sec   | ±0.42%   | 92 samples  |
-| globAll:instance:cached:ctx:deny        | PASS      | 660,777.005 ops/sec   | ±0.64%   | 91 samples  |
-| globStart:new:uncached:ctx:allow        | PASS      | 61,229.161 ops/sec    | ±4.41%   | 73 samples  |
-| globStart:new:cached:ctx:allow          | PASS      | 63,743.44 ops/sec     | ±3.51%   | 84 samples  |
-| globStart:new:uncached:ctx:deny         | PASS      | 74,101.69 ops/sec     | ±4.22%   | 75 samples  |
-| globStart:new:cached:ctx:deny           | PASS      | 79,977.618 ops/sec    | ±3.99%   | 80 samples  |
-| globStart:new:uncached:noctx:allow      | PASS      | 98,369.061 ops/sec    | ±5.42%   | 69 samples  |
-| globStart:new:cached:noctx:allow        | PASS      | 107,343.286 ops/sec   | ±4.95%   | 71 samples  |
-| globStart:instance:uncached:ctx:allow   | PASS      | 184,823.732 ops/sec   | ±0.97%   | 92 samples  |
-| globStart:instance:cached:ctx:allow     | PASS      | 182,590.716 ops/sec   | ±1.71%   | 92 samples  |
-| globStart:instance:uncached:ctx:deny    | PASS      | 337,293.314 ops/sec   | ±3.51%   | 87 samples  |
-| globStart:instance:cached:ctx:deny      | PASS      | 349,905.016 ops/sec   | ±3.28%   | 90 samples  |
-| globStart:instance:uncached:noctx:allow | PASS      | 6,196,766.518 ops/sec | ±0.57%   | 94 samples  |
-| globStart:instance:cached:noctx:allow   | PASS      | 6,155,105.908 ops/sec | ±0.93%   | 96 samples  |
-| exact:new:uncached:ctx:allow            | PASS      | 59,199.734 ops/sec    | ±4.10%   | 83 samples  |
-| exact:new:cached:ctx:allow              | PASS      | 62,288.66 ops/sec     | ±4.00%   | 82 samples  |
-| exact:new:uncached:ctx:deny             | PASS      | 75,681.271 ops/sec    | ±3.60%   | 82 samples  |
-| exact:new:cached:ctx:deny               | PASS      | 79,861.569 ops/sec    | ±3.13%   | 84 samples  |
-| exact:new:uncached:noctx:allow          | PASS      | 97,918.749 ops/sec    | ±4.99%   | 59 samples  |
-| exact:new:cached:noctx:allow            | PASS      | 106,864.059 ops/sec   | ±4.19%   | 68 samples  |
-| exact:instance:uncached:ctx:allow       | PASS      | 184,679.161 ops/sec   | ±2.02%   | 93 samples  |
-| exact:instance:cached:ctx:allow         | PASS      | 180,868.577 ops/sec   | ±3.67%   | 90 samples  |
-| exact:instance:uncached:ctx:deny        | PASS      | 348,250.508 ops/sec   | ±2.33%   | 92 samples  |
-| exact:instance:cached:ctx:deny          | PASS      | 327,895.949 ops/sec   | ±6.75%   | 86 samples  |
-| exact:instance:uncached:noctx:allow     | PASS      | 6,076,297.092 ops/sec | ±1.47%   | 89 samples  |
-| exact:instance:cached:noctx:allow       | PASS      | 6,162,365.859 ops/sec | ±0.88%   | 93 samples  |
+| Test Name | Pass/Fail | ops/sec | variance | samples (n) |
+| --------- | --------- | ------- | -------- | ----------- |
+| globAll:new:uncached:ctx:allow | PASS | 221,995.261 ops/sec | ±1.44% | 88 samples |
+| globAll:new:cached:ctx:allow | PASS | 227,358.726 ops/sec | ±1.47% | 89 samples |
+| globAll:instance:uncached:ctx:deny | PASS | 1,775,213.305 ops/sec | ±0.17% | 101 samples |
+| globAll:instance:cached:ctx:deny | PASS | 1,785,473.205 ops/sec | ±0.10% | 101 samples |
+| globStart:new:uncached:ctx:allow | PASS | 184,047.8 ops/sec | ±0.92% | 94 samples |
+| globStart:new:cached:ctx:allow | PASS | 188,287.008 ops/sec | ±0.84% | 92 samples |
+| globStart:new:uncached:ctx:deny | PASS | 226,179.596 ops/sec | ±0.75% | 91 samples |
+| globStart:new:cached:ctx:deny | PASS | 234,748.535 ops/sec | ±0.77% | 92 samples |
+| globStart:new:uncached:noctx:allow | PASS | 308,131.673 ops/sec | ±1.46% | 91 samples |
+| globStart:new:cached:noctx:allow | PASS | 326,557.043 ops/sec | ±1.00% | 93 samples |
+| globStart:instance:uncached:ctx:allow | PASS | 473,234.682 ops/sec | ±0.13% | 94 samples |
+| globStart:instance:cached:ctx:allow | PASS | 470,377.16 ops/sec | ±0.28% | 96 samples |
+| globStart:instance:uncached:ctx:deny | PASS | 890,055.58 ops/sec | ±0.43% | 95 samples |
+| globStart:instance:cached:ctx:deny | PASS | 914,060.697 ops/sec | ±0.16% | 100 samples |
+| globStart:instance:uncached:noctx:allow | PASS | 11,305,477.395 ops/sec | ±1.56% | 96 samples |
+| globStart:instance:cached:noctx:allow | PASS | 11,323,835.775 ops/sec | ±1.33% | 98 samples |
+| exact:new:uncached:ctx:allow | PASS | 180,006.897 ops/sec | ±1.00% | 93 samples |
+| exact:new:cached:ctx:allow | PASS | 185,633.683 ops/sec | ±0.98% | 91 samples |
+| exact:new:uncached:ctx:deny | PASS | 221,323.028 ops/sec | ±0.83% | 91 samples |
+| exact:new:cached:ctx:deny | PASS | 231,102.935 ops/sec | ±0.77% | 90 samples |
+| exact:new:uncached:noctx:allow | PASS | 311,868.661 ops/sec | ±0.75% | 91 samples |
+| exact:new:cached:noctx:allow | PASS | 320,718.127 ops/sec | ±0.82% | 91 samples |
+| exact:instance:uncached:ctx:allow | PASS | 475,819.535 ops/sec | ±0.11% | 101 samples |
+| exact:instance:cached:ctx:allow | PASS | 477,862.325 ops/sec | ±0.09% | 102 samples |
+| exact:instance:uncached:ctx:deny | PASS | 913,911.153 ops/sec | ±0.10% | 100 samples |
+| exact:instance:cached:ctx:deny | PASS | 913,518.19 ops/sec | ±0.13% | 100 samples |
+| exact:instance:uncached:noctx:allow | PASS | 11,285,403.062 ops/sec | ±1.54% | 96 samples |
+| exact:instance:cached:noctx:allow | PASS | 11,143,168.047 ops/sec | ±0.73% | 99 samples |
 
 ## PolicyDocumentValidator Benchmarks
 
-| Test Name        | Pass/Fail | ops/sec               | variance | samples (n) |
-| ---------------- | --------- | --------------------- | -------- | ----------- |
-| new              | PASS      | 118.693 ops/sec       | ±2.94%   | 76 samples  |
-| new:glob         | PASS      | 131.115 ops/sec       | ±1.55%   | 79 samples  |
-| getInstance      | PASS      | 219,757.349 ops/sec   | ±0.59%   | 94 samples  |
-| getInstance:glob | PASS      | 2,418,934.16 ops/sec  | ±3.10%   | 87 samples  |
-| reuse            | PASS      | 222,149.334 ops/sec   | ±1.93%   | 91 samples  |
-| reuse:glob       | PASS      | 2,756,992.806 ops/sec | ±4.15%   | 89 samples  |
+| Test Name | Pass/Fail | ops/sec | variance | samples (n) |
+| --------- | --------- | ------- | -------- | ----------- |
+| new | PASS | 458.683 ops/sec | ±0.85% | 95 samples |
+| new:glob | PASS | 471.335 ops/sec | ±0.45% | 93 samples |
+| getInstance | PASS | 633,690.686 ops/sec | ±0.15% | 100 samples |
+| getInstance:glob | PASS | 7,139,705.793 ops/sec | ±0.14% | 97 samples |
+| reuse | PASS | 651,603.1 ops/sec | ±0.11% | 102 samples |
+| reuse:glob | PASS | 7,923,267.432 ops/sec | ±0.17% | 95 samples |
 
 ## parsePolicyStatement Benchmarks
 
-| Test Name | Pass/Fail | ops/sec                | variance | samples (n) |
-| --------- | --------- | ---------------------- | -------- | ----------- |
-| single    | PASS      | 7,301,188.489 ops/sec  | ±3.67%   | 89 samples  |
-| multiple  | PASS      | 6,102,120.598 ops/sec  | ±3.18%   | 88 samples  |
-| glob      | PASS      | 11,102,538.088 ops/sec | ±2.99%   | 88 samples  |
-| regex     | PASS      | 1,096,113.707 ops/sec  | ±3.44%   | 92 samples  |
+| Test Name | Pass/Fail | ops/sec | variance | samples (n) |
+| --------- | --------- | ------- | -------- | ----------- |
+| single | PASS | 16,385,095.252 ops/sec | ±0.26% | 100 samples |
+| multiple | PASS | 13,693,743.186 ops/sec | ±0.35% | 95 samples |
+| glob | PASS | 27,931,013.283 ops/sec | ±0.23% | 98 samples |
+| regex | PASS | 2,958,610.099 ops/sec | ±0.61% | 96 samples |
