@@ -10,7 +10,7 @@
   },
   "scripts": {
     "benchmark": "tsx benchmarks/run.ts > benchmarks/results.md",
-    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "build": "tsup-node",
     "build:check": "tsc --noEmit",
     "ci": "npm run pretest:ci && npm run test:ci && npm run posttest:ci",
     "clean": "rm -rf dist",
@@ -20,7 +20,7 @@
     "lint:fix": "eslint --fix --ext .ts,.js lib benchmarks",
     "prepublishOnly": "npm run build",
     "pretest:ci": "npm run build:check",
-    "posttest": "npm run lint:fix && npm run format",
+    "posttest": "npm run build:check && npm run lint:fix && npm run format",
     "posttest:ci": "npm run lint && npm run format:check",
     "release:generate": "semantic-release",
     "test": "tsx --test lib/**/*.test.ts",
@@ -56,6 +56,7 @@
     "eslint-config-prettier": "^9.0.0",
     "prettier": "^3.0.0",
     "semantic-release": "^23.0.0",
+    "tsup": "^8.0.2",
     "tsx": "^4.10.3",
     "typescript": "^5.4.5"
   }
