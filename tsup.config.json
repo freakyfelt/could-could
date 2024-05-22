@@ -1,0 +1,8 @@
+{
+  "clean": true,
+  "dts": true,
+  "entry": ["./index.ts"],
+  "format": ["esm"],
+  "sourcemap": true,
+  "splitting": false
+}
