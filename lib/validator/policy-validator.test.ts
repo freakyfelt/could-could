@@ -1,15 +1,17 @@
-import { PolicyDocumentValidator } from "./policy-validator";
-import { MalformedPolicyStatementError } from "./errors";
+import assert from "node:assert";
+import { describe, it } from "node:test";
+import { PolicyDocumentValidator } from "./policy-validator.js";
+import { MalformedPolicyStatementError } from "./errors.js";
 import {
   BasicResourcePolicy,
   InvalidConstraintPolicy,
   MultipleActionsPolicy,
-} from "../__fixtures__/policies";
+} from "../__fixtures__/policies.js";
 import {
   GlobAllStatement,
   GlobEndStatement,
   GlobStartStatement,
-} from "../__fixtures__/statements";
+} from "../__fixtures__/statements.js";
 
 describe("validateResourcePolicy", () => {
   const validator = new PolicyDocumentValidator();
@@ -30,7 +32,8 @@ describe("validateResourcePolicy", () => {
 
   describe("constraint validations", () => {
     it("throws when a constraint is unparseable", () => {
-      expect(() => validator.validate(InvalidConstraintPolicy)).toThrowError(
+      assert.throws(
+        () => validator.validate(InvalidConstraintPolicy),
         MalformedPolicyStatementError,
       );
     });

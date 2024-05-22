@@ -1,2 +1,2 @@
-export * from "./errors";
-export * from "./policy-validator";
+export * from "./errors.js";
+export * from "./policy-validator.js";

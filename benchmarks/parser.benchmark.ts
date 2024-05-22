@@ -1,11 +1,11 @@
 import Benchmark from "benchmark";
-import { parsePolicyStatement } from "../dist/lib/parsed-policy-statement.js";
+import { parsePolicyStatement } from "../index.js";
 import {
   BasicAllowStatement,
   GlobAllStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "./__fixtures__/statements.mjs";
+} from "./__fixtures__/statements.js";
 
 export function buildParserBenchmarks() {
   return new Benchmark.Suite("parsePolicyStatement Benchmarks")

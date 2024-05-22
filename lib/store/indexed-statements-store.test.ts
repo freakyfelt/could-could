@@ -1,12 +1,14 @@
-import { Actions } from "../__fixtures__/contexts";
+import assert from "node:assert";
+import { beforeEach, describe, it } from "node:test";
+import { Actions } from "../__fixtures__/contexts.js";
 import {
   BasicAllowStatement,
   GlobAllStatement,
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "../__fixtures__/parsed-statements";
-import { IndexedStatementsStore } from "./indexed-statements-store";
+} from "../__fixtures__/parsed-statements.js";
+import { IndexedStatementsStore } from "./indexed-statements-store.js";
 
 describe("IndexedStatementsStore", () => {
   describe("findAllByAction", () => {
@@ -21,7 +23,7 @@ describe("IndexedStatementsStore", () => {
 
     it("returns the expected statements for create", () => {
       const res = store.findAllByAction(Actions.create);
-      expect(res).toEqual([
+      assert.deepEqual(res, [
         GlobAllStatement,
         BasicAllowStatement,
         MultipleActionsStatement,
@@ -30,17 +32,17 @@ describe("IndexedStatementsStore", () => {
 
     it("returns the expected statements for prefixed actions", () => {
       const res = store.findAllByAction(Actions.readDocument);
-      expect(res).toEqual([GlobAllStatement, GlobEndStatement]);
+      assert.deepEqual(res, [GlobAllStatement, GlobEndStatement]);
     });
 
     it("returns the expected statements for postfixed", () => {
       const res = store.findAllByAction(Actions.signDocuments);
-      expect(res).toEqual([GlobAllStatement, GlobStartStatement]);
+      assert.deepEqual(res, [GlobAllStatement, GlobStartStatement]);
     });
 
     it("returns the expected statements for read", () => {
       const res = store.findAllByAction(Actions.read);
-      expect(res).toEqual([GlobAllStatement, MultipleActionsStatement]);
+      assert.deepEqual(res, [GlobAllStatement, MultipleActionsStatement]);
     });
   });
 
@@ -56,20 +58,20 @@ describe("IndexedStatementsStore", () => {
     it("adds the statement to all of the expected store methods", () => {
       store.set(sid, GlobEndStatement);
 
-      expect(store.findAllByAction(Actions.createDocument)).toEqual([
+      assert.deepEqual(store.findAllByAction(Actions.createDocument), [
         GlobEndStatement,
       ]);
-      expect(store.has(sid)).toEqual(true);
-      expect(store.get(sid)).toEqual(GlobEndStatement);
+      assert.equal(store.has(sid), true);
+      assert.deepEqual(store.get(sid), GlobEndStatement);
     });
 
     it("removes the statement from all of the expected store methods", () => {
       store.set(sid, GlobEndStatement);
       store.delete(sid);
 
-      expect(store.findAllByAction(Actions.createDocument)).toEqual([]);
-      expect(store.has(sid)).toEqual(false);
-      expect(store.get(sid)).toEqual(undefined);
+      assert.deepEqual(store.findAllByAction(Actions.createDocument), []);
+      assert.equal(store.has(sid), false);
+      assert.equal(store.get(sid), undefined);
     });
   });
 
@@ -91,14 +93,14 @@ describe("IndexedStatementsStore", () => {
     it("adds the statements to all of the expected store methods", () => {
       store.setGroup(gid, toAdd);
       store.set(MultipleActionsStatement.sid, MultipleActionsStatement);
-      expect(store.findAllByAction(Actions.read)).toEqual([
+      assert.deepStrictEqual(store.findAllByAction(Actions.read), [
         ...expected,
         MultipleActionsStatement,
       ]);
-      expect(store.findAllByGID(gid)).toEqual(expected);
+      assert.deepEqual(store.findAllByGID(gid), expected);
 
       const sid = expected[0].sid;
-      expect(store.get(sid)).toEqual(expected[0]);
+      assert.deepEqual(store.get(sid), expected[0]);
     });
 
     it("removes the statements from all of the expected store methods", () => {
@@ -106,23 +108,23 @@ describe("IndexedStatementsStore", () => {
       store.set(MultipleActionsStatement.sid, MultipleActionsStatement);
       store.deleteGroup(gid);
 
-      expect(store.findAllByAction(Actions.read)).toEqual([
+      assert.deepEqual(store.findAllByAction(Actions.read), [
         MultipleActionsStatement,
       ]);
-      expect(store.findAllByGID(gid)).toEqual([]);
+      assert.deepEqual(store.findAllByGID(gid), []);
 
       const sid = expected[0].sid;
-      expect(store.get(sid)).toEqual(undefined);
+      assert.equal(store.get(sid), undefined);
     });
 
     it("quietly succeeds if the group is not present", () => {
       store.set(MultipleActionsStatement.sid, MultipleActionsStatement);
       store.deleteGroup(gid);
 
-      expect(store.findAllByAction(Actions.read)).toEqual([
+      assert.deepEqual(store.findAllByAction(Actions.read), [
         MultipleActionsStatement,
       ]);
-      expect(store.findAllByGID(gid)).toEqual([]);
+      assert.deepEqual(store.findAllByGID(gid), []);
     });
   });
 });

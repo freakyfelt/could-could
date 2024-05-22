@@ -1,5 +1,5 @@
-import { PolicyStatement } from "../types";
-import { Actions } from "./contexts";
+import { PolicyStatement } from "../types.js";
+import { Actions } from "./contexts.js";
 
 export const GlobAllStatement: PolicyStatement = {
   sid: "GlobAllStatement",

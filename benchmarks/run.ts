@@ -1,10 +1,10 @@
+import Benchmark from "benchmark";
 import process, { stderr, stdout } from "node:process";
-import { buildParserBenchmarks } from "./parser.benchmark.mjs";
-import { buildPolicyDocumentValidatorBenchmarks } from "./validator.benchmark.mjs";
-import { buildPolicyResolverBenchmarks } from "./policy-resolver.benchmark.mjs";
+import { buildParserBenchmarks } from "./parser.benchmark.js";
+import { buildPolicyDocumentValidatorBenchmarks } from "./validator.benchmark.js";
+import { buildPolicyResolverBenchmarks } from "./policy-resolver.benchmark.js";
 
-/** @param {import('benchmark').Suite} suite */
-function runSuite(suite) {
+function runSuite(suite: Benchmark.Suite) {
   stdout.write(`
 ## ${suite.name}
 
@@ -13,15 +13,16 @@ function runSuite(suite) {
 `);
 
   suite
-    .on("cycle", (event) => {
-      /** @type {import('benchmark').Target} */
+    .on("cycle", (event: Benchmark.Event) => {
       const bench = event.target;
 
-      if (bench.error) {
+      // @ts-expect-error target error does not seem to exist
+      if (typeof bench.error !== "undefined") {
         stderr.write(
           `${JSON.stringify({
             suite: suite.name,
             bench: bench.name,
+            // @ts-expect-error target error does to seem to exist
             err: String(bench.error),
           })}\n`,
         );
@@ -29,10 +30,11 @@ function runSuite(suite) {
 
       const cells = [
         bench.name,
+        // @ts-expect-error target error does to seem to exist
         bench.error ? "FAIL" : "PASS",
-        `${bench.hz.toLocaleString()} ops/sec`,
-        `\xb1${bench.stats.rme.toFixed(2)}%`,
-        `${bench.stats.sample.length} samples`,
+        `${bench.hz?.toLocaleString()} ops/sec`,
+        `\xb1${bench.stats?.rme.toFixed(2)}%`,
+        `${bench.stats?.sample.length} samples`,
       ].join(" | ");
 
       stdout.write(["|", cells, "|\n"].join(" "));

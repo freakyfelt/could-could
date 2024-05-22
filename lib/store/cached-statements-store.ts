@@ -1,9 +1,9 @@
 import { LRUCache } from "lru-cache";
 import assert from "node:assert";
-import { ParsedPolicyStatement } from "../parsed-policy-statement";
-import { TypedEmitter } from "../utils/events";
-import { IndexedStatementsStore } from "./indexed-statements-store";
-import { PolicyStatementStore, StoreEvents } from "./types";
+import { ParsedPolicyStatement } from "../parsed-policy-statement.js";
+import { TypedEmitter } from "../utils/events.js";
+import { IndexedStatementsStore } from "./indexed-statements-store.js";
+import { PolicyStatementStore, StoreEvents } from "./types.js";
 
 interface CachedStoreOptions {
   cache?: LRUCache.Options<string, string[], never>;

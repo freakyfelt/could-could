@@ -1,9 +1,9 @@
-import { type PolicyDocument } from "../types";
+import { type PolicyDocument } from "../types.js";
 import {
   BasicAllowStatement,
   InvalidConstraintStatement,
   MultipleActionsStatement,
-} from "./statements";
+} from "./statements.js";
 
 export const BasicResourcePolicy: PolicyDocument = {
   statement: [BasicAllowStatement],

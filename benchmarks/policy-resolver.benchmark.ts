@@ -1,13 +1,17 @@
 import Benchmark from "benchmark";
+import assert from "node:assert";
 import {
   CachedStatementsStore,
   IndexedStatementsStore,
-} from "../dist/lib/store/index.js";
-import { PolicyResolver } from "../dist/lib/policy-resolver.js";
+  PolicyResolver,
+  PolicyStatementStore,
+  parsePolicyStatement,
+} from "../index.js";
 import {
   allowAllContext,
   allowContext,
   BasicAllowStatement,
+  BencharkContext,
   ContextualAllowStatement,
   ContextualDenyStatement,
   ContextualGlobAllAllowStatement,
@@ -19,9 +23,7 @@ import {
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
-} from "./__fixtures__/statements.mjs";
-import { parsePolicyStatement } from "../dist/lib/parsed-policy-statement.js";
-import assert from "assert";
+} from "./__fixtures__/statements.js";
 
 const indexed = new IndexedStatementsStore();
 indexed.addAll(
@@ -60,19 +62,34 @@ const resCachedNoCtx = new PolicyResolver(cachedNoCtx);
  *
  * @param {IndexedStatementsStore|CachedStatementsStore} store
  */
-const withNewResolver = (store, expected, action, ctx) => {
+const withNewResolver = (
+  store: PolicyStatementStore,
+  expected: boolean,
+  action: string,
+  ctx?: BencharkContext,
+) => {
   const res = new PolicyResolver(store);
+  // @ts-expect-error removeAllListeners is not present on emitter
   store.removeAllListeners();
   assert(res.can(action, ctx) === expected);
 };
 
-const withResolver = (resolver, expected, action, ctx) => {
+const withResolver = (
+  resolver: PolicyResolver,
+  expected: boolean,
+  action: string,
+  ctx?: BencharkContext,
+) => {
   assert(resolver.can(action, ctx) === expected);
 };
 
 // labels are `{label}:{resolverType}:{storeType}:{effect}`
 
-const addActionTests = (suite, action, label) => {
+const addActionTests = (
+  suite: Benchmark.Suite,
+  action: string,
+  label: string,
+) => {
   suite
     .add(`${label}:new:uncached:ctx:allow`, () =>
       withNewResolver(indexed, true, action, allowContext),

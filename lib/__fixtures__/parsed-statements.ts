@@ -1,5 +1,5 @@
-import * as statements from "./statements";
-import { parsePolicyStatement } from "../parsed-policy-statement";
+import * as statements from "./statements.js";
+import { parsePolicyStatement } from "../parsed-policy-statement.js";
 
 export const GlobAllStatement = parsePolicyStatement(
   statements.GlobAllStatement,

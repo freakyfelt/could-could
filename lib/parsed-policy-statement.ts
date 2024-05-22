@@ -1,13 +1,13 @@
 import { RulesLogic } from "json-logic-js";
 import { randomUUID } from "node:crypto";
-import { PolicyStatement } from "./types";
-import { arrayify } from "./utils/arr";
-import { traverseRulesLogic } from "./utils/logic";
+import { PolicyStatement } from "./types.js";
+import { arrayify } from "./utils/arr.js";
+import { traverseRulesLogic } from "./utils/logic.js";
 import {
   isStringLiteral,
   isValidPattern,
   regexFromPattern,
-} from "./utils/regex";
+} from "./utils/regex.js";
 
 export type ActionsByType = {
   exact: string[];
@@ -86,6 +86,7 @@ export function parsePolicyActions(actions: string[]): ActionsByType {
 
 interface ParseOptions {
   sid?: string;
+  gid?: string;
 }
 
 export function parsePolicyStatement(
@@ -96,8 +97,10 @@ export function parsePolicyStatement(
   const actions = arrayify(action);
 
   const sid = opts.sid ?? statement.sid ?? randomUUID();
+  const gid = opts.gid;
 
   return {
+    gid,
     sid,
 
     effect,

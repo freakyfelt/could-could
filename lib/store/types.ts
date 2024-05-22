@@ -1,5 +1,5 @@
-import { ParsedPolicyStatement } from "../parsed-policy-statement";
-import { Emitter } from "../utils/events";
+import { ParsedPolicyStatement } from "../parsed-policy-statement.js";
+import { Emitter } from "../utils/events.js";
 
 export type ParsedStatementsDB = Map<string, ParsedPolicyStatement>;
 
