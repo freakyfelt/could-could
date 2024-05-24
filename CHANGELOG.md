@@ -1,11 +1,24 @@
-# [2.1.0](https://github.com/freakyfelt/could-could/compare/v2.0.0...v2.1.0) (2023-03-08)
+# Changelog
+
+## [3.0.0](https://github.com/freakyfelt/could-could/compare/could-could-v2.1.0...could-could-v3.0.0) (2024-05-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* move to ESM; drop Node 16.x support ([#393](https://github.com/freakyfelt/could-could/issues/393))
+
+### Features
+
+* move to ESM; drop Node 16.x support ([#393](https://github.com/freakyfelt/could-could/issues/393)) ([b0556b4](https://github.com/freakyfelt/could-could/commit/b0556b456419272b221fc2f8acaaf6437d615d80))
+
+## [2.1.0](https://github.com/freakyfelt/could-could/compare/v2.0.0...v2.1.0) (2023-03-08)
 
 
 ### Features
 
 * trigger a ci workflow ([ca3ebb6](https://github.com/freakyfelt/could-could/commit/ca3ebb61f2f87afd4abed4fe8b32d2158cceaeb8))
 
-# [2.0.0](https://github.com/freakyfelt/could-could/compare/v1.0.0...v2.0.0) (2023-03-08)
+## [2.0.0](https://github.com/freakyfelt/could-could/compare/v1.0.0...v2.0.0) (2023-03-08)
 
 
 ### Bug Fixes
@@ -28,7 +41,7 @@
 
 * the 2.x interface drops environments and resource types
 
-# [2.0.0](https://github.com/freakyfelt/could-could/compare/v1.0.0...v2.0.0) (2023-03-08)
+## [2.0.0](https://github.com/freakyfelt/could-could/compare/v1.0.0...v2.0.0) (2023-03-08)
 
 
 ### Bug Fixes
@@ -50,7 +63,7 @@
 
 * the 2.x interface drops environments and resource types
 
-# [2.0.0](https://github.com/freakyfelt/could-could/compare/v1.0.0...v2.0.0) (2023-03-08)
+## [2.0.0](https://github.com/freakyfelt/could-could/compare/v1.0.0...v2.0.0) (2023-03-08)
 
 
 ### Bug Fixes
