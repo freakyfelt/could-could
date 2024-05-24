@@ -22,7 +22,6 @@
     "pretest:ci": "npm run build:check",
     "posttest": "npm run build:check && npm run lint:fix && npm run format",
     "posttest:ci": "npm run lint && npm run format:check",
-    "release:generate": "semantic-release",
     "test": "tsx --test lib/**/*.test.ts",
     "test:ci": "tsx --test lib/**/*.test.ts",
     "test:watch": "tsx --test --watch lib/**/*.test.ts"
@@ -38,12 +37,6 @@
     "lru-cache": "^10.0.0"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.2",
-    "@semantic-release/commit-analyzer": "^12.0.0",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^10.0.2",
-    "@semantic-release/npm": "^12.0.0",
-    "@semantic-release/release-notes-generator": "^13.0.0",
     "@tsconfig/node18": "^18.2.4",
     "@types/benchmark": "^2.1.2",
     "@types/jest": "^29.2.2",
@@ -55,7 +48,6 @@
     "eslint": "^8.35.0",
     "eslint-config-prettier": "^9.0.0",
     "prettier": "^3.0.0",
-    "semantic-release": "^23.0.0",
     "tsup": "^8.0.2",
     "tsx": "^4.10.3",
     "typescript": "^5.4.5"
