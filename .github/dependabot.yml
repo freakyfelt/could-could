@@ -11,3 +11,7 @@ updates:
       interval: "daily"
     labels:
       - dependencies
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
