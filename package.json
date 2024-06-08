@@ -1,6 +1,6 @@
 {
   "name": "@freakyfelt/could-could",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "An authorization library built on top of JsonLogic",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
