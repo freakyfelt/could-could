@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.1](https://github.com/freakyfelt/could-could/compare/v3.0.0...v3.0.1) (2024-06-08)
+
+
+### Bug Fixes
+
+* **deps:** bump ajv from 8.14.0 to 8.15.0 ([#415](https://github.com/freakyfelt/could-could/issues/415)) ([0b12a35](https://github.com/freakyfelt/could-could/commit/0b12a35417005516ed57ae73c0b04a014a420b13))
+* **deps:** bump ajv from 8.15.0 to 8.16.0 ([#418](https://github.com/freakyfelt/could-could/issues/418)) ([ebf56e7](https://github.com/freakyfelt/could-could/commit/ebf56e735b4d40560991428e6a806b886c7f3ba9))
+
 ## [3.0.0](https://github.com/freakyfelt/could-could/compare/could-could-v2.1.0...could-could-v3.0.0) (2024-05-24)
 
 
