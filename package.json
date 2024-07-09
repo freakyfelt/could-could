@@ -34,7 +34,7 @@
     "json-logic-js": "^2.0.2",
     "just-has": "^2.3.0",
     "just-unique": "^4.2.0",
-    "lru-cache": "^10.0.0"
+    "lru-cache": "^11.0.0"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.4",
