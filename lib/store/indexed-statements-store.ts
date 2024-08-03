@@ -213,6 +213,7 @@ export class IndexedStatementsStore
         ...existing.filter((sid) => !sids.includes(sid)),
         ...updates,
       ];
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       updated.length === 0
         ? this.#byAction.exact.delete(action)
         : this.#byAction.exact.set(action, updated);

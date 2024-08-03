@@ -142,6 +142,7 @@ export class PolicyResolver {
     const deny: ParsedPolicyStatement[] = [];
 
     this.#policyStore.findAllByAction(action).forEach((statement) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       statement.effect === "deny"
         ? deny.push(statement)
         : allow.push(statement);
