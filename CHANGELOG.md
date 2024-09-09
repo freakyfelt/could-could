@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.2](https://github.com/freakyfelt/could-could/compare/v3.0.1...v3.0.2) (2024-09-09)
+
+
+### Bug Fixes
+
+* **deps:** bump ajv from 8.16.0 to 8.17.1 ([#453](https://github.com/freakyfelt/could-could/issues/453)) ([3e9f8ae](https://github.com/freakyfelt/could-could/commit/3e9f8ae91c439f17bfdf36139e898a666ff84bf0))
+* **deps:** bump json-logic-js from 2.0.2 to 2.0.5 ([#452](https://github.com/freakyfelt/could-could/issues/452)) ([5d36bca](https://github.com/freakyfelt/could-could/commit/5d36bcac5eefad003736dd062c6a57d82032ab5b))
+* **deps:** bump lru-cache from 10.2.2 to 10.3.0 ([#441](https://github.com/freakyfelt/could-could/issues/441)) ([0cba53d](https://github.com/freakyfelt/could-could/commit/0cba53d596db24fd8a2ce9336e7767ad591d8cbb))
+* **deps:** bump lru-cache from 10.3.0 to 10.4.0 ([#447](https://github.com/freakyfelt/could-could/issues/447)) ([f1195d6](https://github.com/freakyfelt/could-could/commit/f1195d677b3c6a76fad7bfbefcb3e9cb08179cae))
+* **deps:** bump lru-cache from 10.4.0 to 11.0.0 ([#450](https://github.com/freakyfelt/could-could/issues/450)) ([0509e0f](https://github.com/freakyfelt/could-could/commit/0509e0f741d61e10dbab6bfb95a93d484d70a656))
+* **deps:** bump lru-cache from 11.0.0 to 11.0.1 ([#502](https://github.com/freakyfelt/could-could/issues/502)) ([271a404](https://github.com/freakyfelt/could-could/commit/271a4042186a3548e6826ed03f6353915a2e7251))
+
 ## [3.0.1](https://github.com/freakyfelt/could-could/compare/v3.0.0...v3.0.1) (2024-06-08)
 
 
