@@ -16,8 +16,8 @@
     "clean": "rm -rf dist",
     "format": "prettier -w lib benchmarks",
     "format:check": "prettier -c lib benchmarks",
-    "lint": "eslint --ext .ts,.js lib benchmarks",
-    "lint:fix": "eslint --fix --ext .ts,.js lib benchmarks",
+    "lint": "eslint lib benchmarks",
+    "lint:fix": "eslint --fix lib benchmarks",
     "prepublishOnly": "npm run build",
     "pretest:ci": "npm run build:check",
     "posttest": "npm run build:check && npm run lint:fix && npm run format",
@@ -37,6 +37,7 @@
     "lru-cache": "^11.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.10.0",
     "@tsconfig/node18": "^18.2.4",
     "@types/benchmark": "^2.1.2",
     "@types/jest": "^29.2.2",
@@ -45,11 +46,13 @@
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "benchmark": "^2.1.4",
-    "eslint": "^8.35.0",
+    "eslint": "^9.10.0",
     "eslint-config-prettier": "^9.0.0",
+    "globals": "^15.9.0",
     "prettier": "^3.0.0",
     "tsup": "^8.0.2",
     "tsx": "^4.10.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.5.0"
   }
 }
