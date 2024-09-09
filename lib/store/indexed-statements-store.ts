@@ -140,7 +140,7 @@ export class IndexedStatementsStore
     const statementIds = [...this.#byAction.globAll];
 
     if (this.#byAction.exact.has(action)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+       
       statementIds.push(...this.#byAction.exact.get(action)!);
     }
     for (const [regexp, sid] of this.#byAction.regex) {
@@ -188,6 +188,7 @@ export class IndexedStatementsStore
       s.actionsByType.regex.map((re): [RegExp, string] => [re, s.sid]),
     );
     this.#byAction.regex = [
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ...this.#byAction.regex.filter(([_regex, id]) => !sids.includes(id)),
       ...regex,
     ];
