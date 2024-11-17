@@ -41,7 +41,11 @@ function extractVarPaths(logic: RulesLogic): string[] {
       if (path.length && LIST_OPS.includes(path[path.length - 1] as string)) {
         return false;
       }
-      if (typeof innerLogic !== "object" || !("var" in innerLogic)) {
+      if (
+        innerLogic == null ||
+        typeof innerLogic !== "object" ||
+        !("var" in innerLogic)
+      ) {
         return;
       }
 

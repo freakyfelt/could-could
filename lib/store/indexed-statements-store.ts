@@ -140,7 +140,6 @@ export class IndexedStatementsStore
     const statementIds = [...this.#byAction.globAll];
 
     if (this.#byAction.exact.has(action)) {
-       
       statementIds.push(...this.#byAction.exact.get(action)!);
     }
     for (const [regexp, sid] of this.#byAction.regex) {

@@ -18,6 +18,9 @@ function _traverseRulesLogic(
   logic: RulesLogic,
   params: InnerTraverseParams,
 ): void {
+  if (logic == null) {
+    return;
+  }
   // we only want Rule objects, not primitives
   if (typeof logic !== "object") {
     return;
