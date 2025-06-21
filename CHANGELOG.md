@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.0](https://github.com/freakyfelt/could-could/compare/v3.0.2...v4.0.0) (2025-06-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* set minimum Node suppor to v20.17 ([#780](https://github.com/freakyfelt/could-could/issues/780))
+
+### Bug Fixes
+
+* **deps:** bump lru-cache from 11.0.1 to 11.0.2 ([#568](https://github.com/freakyfelt/could-could/issues/568)) ([28fa647](https://github.com/freakyfelt/could-could/commit/28fa647a49fcb09556973a8f818b4725185e4e40))
+* **deps:** bump lru-cache from 11.0.2 to 11.1.0 ([#695](https://github.com/freakyfelt/could-could/issues/695)) ([9aeaf95](https://github.com/freakyfelt/could-could/commit/9aeaf95d660cc6bfe03c277f6cfa633cef5d5108))
+* set minimum Node suppor to v20.17 ([#780](https://github.com/freakyfelt/could-could/issues/780)) ([3f253aa](https://github.com/freakyfelt/could-could/commit/3f253aadce98b6966f6d9ad305e9864e3716633c))
+
 ## [3.0.2](https://github.com/freakyfelt/could-could/compare/v3.0.1...v3.0.2) (2024-09-09)
 
 
