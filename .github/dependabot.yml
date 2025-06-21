@@ -7,10 +7,18 @@ version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/" # Location of package manifests
+    # https://github.com/dependabot/dependabot-core/issues/5226
+    versioning-strategy: "increase"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     labels:
       - dependencies
+    ignore:
+      - dependency-name: "@types/node"
+        versions: ">=21.0.0"
+    groups:
+      development:
+        dependency-type: "development"
     commit-message:
       prefix: fix
       prefix-development: chore
