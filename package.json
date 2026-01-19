@@ -42,17 +42,17 @@
     "@types/benchmark": "^2.1.2",
     "@types/jest": "^30.0.0",
     "@types/json-logic-js": "^2.0.1",
-    "@types/node": "^20.19.28",
-    "@typescript-eslint/eslint-plugin": "^8.52.0",
-    "@typescript-eslint/parser": "^8.52.0",
+    "@types/node": "^20.19.30",
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0",
     "benchmark": "^2.1.4",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.0.0",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.0",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.52.0"
+    "typescript-eslint": "^8.53.0"
   }
 }
