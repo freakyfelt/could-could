@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.0.1](https://github.com/freakyfelt/could-could/compare/v4.0.0...v4.0.1) (2026-03-20)
+
+
+### Bug Fixes
+
+* **deps:** bump ajv from 8.17.1 to 8.18.0 ([#820](https://github.com/freakyfelt/could-could/issues/820)) ([feba114](https://github.com/freakyfelt/could-could/commit/feba11429676a4263e3153da05a9d2def3ad2246))
+* **deps:** bump lru-cache from 11.1.0 to 11.2.1 ([#792](https://github.com/freakyfelt/could-could/issues/792)) ([01fb924](https://github.com/freakyfelt/could-could/commit/01fb92451a276f0836539a8157085984f9d856e1))
+* **deps:** bump lru-cache from 11.2.1 to 11.2.2 ([#794](https://github.com/freakyfelt/could-could/issues/794)) ([e7e3af5](https://github.com/freakyfelt/could-could/commit/e7e3af5435bbfaeb4fc672de994d1b4f51dcd784))
+* **deps:** bump lru-cache from 11.2.2 to 11.2.4 ([#806](https://github.com/freakyfelt/could-could/issues/806)) ([bb15a2c](https://github.com/freakyfelt/could-could/commit/bb15a2c3df1ad41b68bbc4078f303625c75aff41))
+* **deps:** bump lru-cache from 11.2.4 to 11.2.5 ([#816](https://github.com/freakyfelt/could-could/issues/816)) ([aa7d308](https://github.com/freakyfelt/could-could/commit/aa7d3081652bf1784ec721ebbf18522d51a9d557))
+* **deps:** bump lru-cache from 11.2.5 to 11.2.6 ([#819](https://github.com/freakyfelt/could-could/issues/819)) ([495ce81](https://github.com/freakyfelt/could-could/commit/495ce81fc87d13662c2e139f97eaace8cead5e3a))
+* **deps:** bump lru-cache from 11.2.6 to 11.2.7 ([#827](https://github.com/freakyfelt/could-could/issues/827)) ([3ce6382](https://github.com/freakyfelt/could-could/commit/3ce63821baf8adc970cb35fc2bc6b6abc7494013))
+* **deps:** bump minimatch ([#823](https://github.com/freakyfelt/could-could/issues/823)) ([2a4d638](https://github.com/freakyfelt/could-could/commit/2a4d6382d5a630c8da1e77a7149eb36082ffd183))
+
 ## [4.0.0](https://github.com/freakyfelt/could-could/compare/v3.0.2...v4.0.0) (2025-06-21)
 
 
