@@ -52,7 +52,7 @@
     "json-logic-js": "^2.0.2",
     "just-has": "^2.3.0",
     "just-unique": "^4.2.0",
-    "lru-cache": "^11.2.7"
+    "lru-cache": "^11.3.0"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
