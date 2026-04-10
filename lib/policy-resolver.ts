@@ -1,9 +1,9 @@
 import pathExists from "just-has";
 import jsonLogic from "json-logic-js";
 import { LRUCache } from "lru-cache";
-import { randomUUID } from "node:crypto";
 import { CachedStatementsStore } from "./store/cached-statements-store.js";
 import { PolicyStatementStore } from "./store/types.js";
+import { createRandomId } from "./utils/random-id.js";
 import {
   ParsedPolicyStatement,
   parsePolicyStatement,
@@ -58,7 +58,7 @@ export class PolicyResolver {
     docs.forEach((doc) => {
       validator.validate(doc);
 
-      const gid = doc.id ?? randomUUID();
+      const gid = doc.id ?? createRandomId();
 
       const parsed = arrayify(doc.statement).map((statement) =>
         parsePolicyStatement(statement),

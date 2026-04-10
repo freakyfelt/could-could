@@ -1,5 +1,4 @@
 import { LRUCache } from "lru-cache";
-import assert from "node:assert";
 import { ParsedPolicyStatement } from "../parsed-policy-statement.js";
 import { TypedEmitter } from "../utils/events.js";
 import { IndexedStatementsStore } from "./indexed-statements-store.js";
@@ -72,7 +71,9 @@ export class CachedStatementsStore
   #mustGet(sid: string): ParsedPolicyStatement {
     const statement = this.#store.get(sid);
 
-    assert.ok(statement, `no statement with sid '${sid}'`);
+    if (!statement) {
+      throw new Error(`no statement with sid '${sid}'`);
+    }
 
     return statement;
   }

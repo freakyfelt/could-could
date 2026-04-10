@@ -1,5 +1,5 @@
 import { RulesLogic } from "json-logic-js";
-import { randomUUID } from "node:crypto";
+import { createRandomId } from "./utils/random-id.js";
 import { PolicyStatement } from "./types.js";
 import { arrayify } from "./utils/arr.js";
 import { traverseRulesLogic } from "./utils/logic.js";
@@ -100,7 +100,7 @@ export function parsePolicyStatement(
   const { action, constraint, effect } = statement;
   const actions = arrayify(action);
 
-  const sid = opts.sid ?? statement.sid ?? randomUUID();
+  const sid = opts.sid ?? statement.sid ?? createRandomId();
   const gid = opts.gid;
 
   return {

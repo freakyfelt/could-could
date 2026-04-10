@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { describe, it, mock } from "node:test";
+import { beforeEach, describe, it, mock } from "node:test";
 import { parsePolicyStatement } from "./parsed-policy-statement.js";
 import { PolicyResolver } from "./policy-resolver.js";
 import { IndexedStatementsStore } from "./store/index.js";

@@ -1,5 +1,3 @@
-import EventEmitter from "node:events";
-
 type EventMap = Record<string, unknown>;
 
 type EventKey<T extends EventMap> = string & keyof T;
@@ -12,20 +10,39 @@ export interface Emitter<T extends EventMap> {
 }
 
 export class TypedEmitter<T extends EventMap> implements Emitter<T> {
-  private emitter = new EventEmitter();
+  private listeners = new Map<string, Set<EventReceiver<unknown>>>();
+
   on<K extends EventKey<T>>(eventName: K, fn: EventReceiver<T[K]>) {
-    this.emitter.on(eventName, fn);
+    const listeners =
+      this.listeners.get(eventName) ?? new Set<EventReceiver<unknown>>();
+    listeners.add(fn as EventReceiver<unknown>);
+    this.listeners.set(eventName, listeners);
   }
 
   off<K extends EventKey<T>>(eventName: K, fn: EventReceiver<T[K]>) {
-    this.emitter.off(eventName, fn);
+    const listeners = this.listeners.get(eventName);
+    if (!listeners) {
+      return;
+    }
+
+    listeners.delete(fn as EventReceiver<unknown>);
+    if (listeners.size === 0) {
+      this.listeners.delete(eventName);
+    }
   }
 
   emit<K extends EventKey<T>>(eventName: K, params: T[K]) {
-    this.emitter.emit(eventName, params);
+    const listeners = this.listeners.get(eventName);
+    if (!listeners) {
+      return;
+    }
+
+    for (const listener of listeners) {
+      listener(params);
+    }
   }
 
   removeAllListeners() {
-    this.emitter.removeAllListeners();
+    this.listeners.clear();
   }
 }

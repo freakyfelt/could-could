@@ -1,5 +1,4 @@
 import uniq from "just-unique";
-import assert from "node:assert";
 import { ParsedPolicyStatement } from "../parsed-policy-statement.js";
 import { TypedEmitter } from "../utils/events.js";
 import {
@@ -154,7 +153,9 @@ export class IndexedStatementsStore
   #mustGet(sid: string): ParsedPolicyStatement {
     const statement = this.#statements.get(sid);
 
-    assert.ok(statement, `no statement with sid '${sid}'`);
+    if (!statement) {
+      throw new Error(`no statement with sid '${sid}'`);
+    }
 
     return statement;
   }
