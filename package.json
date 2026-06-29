@@ -55,24 +55,24 @@
     "lru-cache": "^11.5.1"
   },
   "devDependencies": {
-    "@arethetypeswrong/core": "^0.18.3",
+    "@arethetypeswrong/core": "^0.18.4",
     "@eslint/js": "^10.0.1",
     "@tsconfig/node20": "^20.1.9",
     "@types/benchmark": "^2.1.2",
     "@types/jest": "^30.0.0",
     "@types/json-logic-js": "^2.0.1",
     "@types/node": "^20.19.43",
-    "@typescript-eslint/eslint-plugin": "^8.61.1",
-    "@typescript-eslint/parser": "^8.61.1",
+    "@typescript-eslint/eslint-plugin": "^8.62.0",
+    "@typescript-eslint/parser": "^8.62.0",
     "benchmark": "^2.1.4",
-    "eslint": "^10.5.0",
+    "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.6.0",
-    "prettier": "^3.8.4",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.1",
     "publint": "^0.3.21",
     "tsdown": "^0.22.3",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1"
+    "typescript-eslint": "^8.62.0"
   }
 }
