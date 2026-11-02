@@ -1,5 +1,31 @@
 # Changelog
 
+## [5.0.0](https://github.com/freakyfelt/could-could/compare/v4.0.1...v5.0.0) (2026-11-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop Node 20 support ([#875](https://github.com/freakyfelt/could-could/issues/875))
+
+### Bug Fixes
+
+* **deps:** bump ajv from 8.18.0 to 8.20.0 ([#842](https://github.com/freakyfelt/could-could/issues/842)) ([bd5b8db](https://github.com/freakyfelt/could-could/commit/bd5b8dbbdc652f643ce75675c90f5e1252069c68))
+* **deps:** bump esbuild from 0.28.0 to 0.28.1 ([#854](https://github.com/freakyfelt/could-could/issues/854)) ([a99c221](https://github.com/freakyfelt/could-could/commit/a99c221bed70b7598fbe0fae088add0e988c30c6))
+* **deps:** bump fast-uri from 3.0.1 to 3.1.2 ([#844](https://github.com/freakyfelt/could-could/issues/844)) ([5894a7f](https://github.com/freakyfelt/could-could/commit/5894a7ff23715de91e322ee4b55fe30fa5936167))
+* **deps:** bump fast-uri from 3.1.2 to 3.1.4 ([#862](https://github.com/freakyfelt/could-could/issues/862)) ([a307acb](https://github.com/freakyfelt/could-could/commit/a307acbd10cc91afc3a06d833ba2e052d2271e86))
+* **deps:** bump fast-uri from 3.1.4 to 3.1.5 ([#865](https://github.com/freakyfelt/could-could/issues/865)) ([aa57216](https://github.com/freakyfelt/could-could/commit/aa5721617c93e651e6b7f38b39a15037d595f7c9))
+* **deps:** bump fast-uri from 3.1.5 to 3.1.9 ([#874](https://github.com/freakyfelt/could-could/issues/874)) ([dc2959a](https://github.com/freakyfelt/could-could/commit/dc2959a908ed5af935cde23d583bcc24e5e8ac6a))
+* **deps:** bump lru-cache from 11.2.7 to 11.3.0 ([#836](https://github.com/freakyfelt/could-could/issues/836)) ([aeddbf6](https://github.com/freakyfelt/could-could/commit/aeddbf6db985df8ecceed6dfae3a91b0f99fac2c))
+* **deps:** bump lru-cache from 11.3.0 to 11.3.5 ([#839](https://github.com/freakyfelt/could-could/issues/839)) ([d118f87](https://github.com/freakyfelt/could-could/commit/d118f8750fde2f824615321501404f3e1810aed9))
+* **deps:** bump lru-cache from 11.3.5 to 11.3.6 ([#846](https://github.com/freakyfelt/could-could/issues/846)) ([a36d6e8](https://github.com/freakyfelt/could-could/commit/a36d6e8b6e583878456f4caf8e894aef2683f58e))
+* **deps:** bump lru-cache from 11.3.6 to 11.4.0 ([#848](https://github.com/freakyfelt/could-could/issues/848)) ([6d78c24](https://github.com/freakyfelt/could-could/commit/6d78c246157a66ca0fb590e206d375d3583f6e5f))
+* **deps:** bump lru-cache from 11.4.0 to 11.5.0 ([#850](https://github.com/freakyfelt/could-could/issues/850)) ([1658d81](https://github.com/freakyfelt/could-could/commit/1658d81b0cf516faa6dfc00d2cdb794fc7fdd4b1))
+* **deps:** bump lru-cache from 11.5.0 to 11.5.1 ([#852](https://github.com/freakyfelt/could-could/issues/852)) ([038d8aa](https://github.com/freakyfelt/could-could/commit/038d8aac055ed630260488016f8dbf645ce3e39c))
+* **deps:** bump lru-cache from 11.5.1 to 11.5.2 ([#860](https://github.com/freakyfelt/could-could/issues/860)) ([867f8d9](https://github.com/freakyfelt/could-could/commit/867f8d9d0407876068920c5800c1415f6daa937d))
+* **deps:** bump lru-cache from 11.5.2 to 11.5.3 ([#871](https://github.com/freakyfelt/could-could/issues/871)) ([468b304](https://github.com/freakyfelt/could-could/commit/468b3044baba110e558626da57e3ac5e1e0ddbec))
+* **deps:** bump picomatch ([#832](https://github.com/freakyfelt/could-could/issues/832)) ([d23dcbd](https://github.com/freakyfelt/could-could/commit/d23dcbd4ba24b3bf32be4772bfa60d2ee090f3e2))
+* drop Node 20 support ([#875](https://github.com/freakyfelt/could-could/issues/875)) ([f930e24](https://github.com/freakyfelt/could-could/commit/f930e248553947ebf8a83d84d19f3ed5ff4fadee))
+
 ## [4.0.1](https://github.com/freakyfelt/could-could/compare/v4.0.0...v4.0.1) (2026-03-20)
 
 
