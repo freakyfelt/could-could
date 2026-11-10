@@ -3,7 +3,6 @@ import { beforeEach, describe, it, mock } from "node:test";
 import { parsePolicyStatement } from "./parsed-policy-statement.js";
 import { PolicyResolver } from "./policy-resolver.js";
 import { IndexedStatementsStore } from "./store/index.js";
-import { MalformedPolicyDocumentError } from "./validator/errors.js";
 import {
   Actions,
   allowedContext,
@@ -18,6 +17,7 @@ import {
   GlobEndStatement,
   GlobStartStatement,
   MultipleActionsStatement,
+  SingleCharGlobStatement,
 } from "./__fixtures__/statements.js";
 
 describe("PolicyParser", () => {
@@ -84,22 +84,19 @@ describe("PolicyParser", () => {
     });
   });
 
-  describe("single-character glob patterns", () => {
-    it("rejects '?' through fromDocuments", () => {
-      assert.throws(
-        () =>
-          PolicyResolver.fromDocuments([
-            {
-              statement: {
-                sid: "q",
-                action: "documents:?ead",
-                effect: "allow",
-                constraint: true,
-              },
-            },
-          ]),
-        MalformedPolicyDocumentError,
-      );
+  describe("single-character glob matching", () => {
+    const policies = PolicyResolver.fromDocuments([
+      { statement: SingleCharGlobStatement },
+    ]);
+
+    it("matches exactly one character", () => {
+      assert.equal(policies.can("documents:read"), true);
+      assert.equal(policies.can("documents:head"), true);
+    });
+
+    it("does not match zero or two characters", () => {
+      assert.equal(policies.can("documents:ead"), false);
+      assert.equal(policies.can("documents:rread"), false);
     });
   });
 
