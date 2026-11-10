@@ -14,7 +14,7 @@ could-could is yet another authorization library built atop [JsonLogic](https://
 
 - `action`: patterns to match for action(s) that could be requested (e.g. `create`, `kitties:PetKitty`)
   - Patterns can be specified as a single string or an array of strings
-  - Patterns can be exact matches, match all actions (`'*'`), or starts with/ends with using `'*'` as a glob operator
+  - Patterns can be exact matches, match all actions (`'*'`), or starts with/ends with using `'*'` as a glob operator. `'?'` matches exactly one character.
 - `effect`: what the result should be if the `constraint` is true
 - `constraint`: the rules that will be evaluated to determine if the effect should apply
 - `context`: the extra data that can be provided to make decisions, such as a principal (e.g. user/service object) or the resource in question
