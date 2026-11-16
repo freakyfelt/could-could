@@ -57,7 +57,7 @@
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
     "@eslint/js": "^10.0.1",
-    "@tsconfig/node22": "^22.0.6",
+    "@tsconfig/node22": "^22.0.7",
     "@types/benchmark": "^2.1.2",
     "@types/jest": "^30.0.0",
     "@types/json-logic-js": "^2.0.1",
