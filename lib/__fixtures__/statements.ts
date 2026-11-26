@@ -22,6 +22,13 @@ export const GlobEndStatement: PolicyStatement = {
   constraint: true,
 };
 
+export const SingleCharGlobStatement: PolicyStatement = {
+  sid: "SingleCharGlobStatement",
+  action: "documents:?ead",
+  effect: "allow",
+  constraint: true,
+};
+
 export const BasicAllowStatement: PolicyStatement = {
   sid: "BasicAllowStatement",
   action: Actions.create,

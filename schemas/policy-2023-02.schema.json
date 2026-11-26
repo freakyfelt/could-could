@@ -67,7 +67,8 @@
       "oneOf": [
         { "$ref": "#/$defs/actionName" },
         { "$ref": "#/$defs/globStart"},
-        { "$ref": "#/$defs/globEnd"}
+        { "$ref": "#/$defs/globEnd"},
+        { "$ref": "#/$defs/singleCharGlob"}
       ]
     },
     "actionName": {
@@ -88,6 +89,11 @@
       "description": "Match all actions ending with the postfix",
       "type": "string",
       "pattern": "^\\*[A-z0-9\\.:_-]+$"
+    },
+    "singleCharGlob": {
+      "description": "Match actions using '?' as a single-character wildcard, optionally combined with '*'",
+      "type": "string",
+      "pattern": "^(?=.*\\?)[A-z0-9\\.:_?*-]+$"
     }
   }
 }
